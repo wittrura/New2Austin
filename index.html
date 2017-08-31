@@ -11,10 +11,12 @@
     <!-- Compiled and minified JavaScript -->
     <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+
     <script type="text/javascript" src="app.js" defer></script>
   </head>
   <body>
     <!-- navbar -->
+    
     <!-- /navbar -->
     <div class="container">
       <div class="row">
@@ -23,7 +25,6 @@
           <h2>Refine Map Results</h2>
           <div class="row">
             <form>
-            <!-- <form class="col s12"> -->
               <div class="input-field col s6 m12">
                 <input placeholder="2005 Willow Creek Dr..." id="address" type="text">
                 <label for="address">Address</label>
@@ -32,12 +33,6 @@
                 <input placeholder="Uchi, University of Texas..." id="landmark" type="text">
                 <label for="landmark">Landmark</label>
               </div>
-              <!-- <div class="input-field col s4 m12">
-                <p class="range-field">
-                  <input type="range" id="test5" min="0" max="100" />
-                  <label for="proximity">Select Proximity</label>
-                </p>
-              </div> -->
               <div class="col s8 offset-s2 m12">
                  <label>Materialize Range</label>
                  <p class="range-field">
@@ -69,10 +64,25 @@
         <!-- map -->
         <main class="col s12 m8">
           <h2>Map Results</h2>
-          <img src="map.png" alt="">
+          <div class="row" id="map"></div>
         </main>
         <!-- /map -->
       </div>
     </div>
+    <!-- <script>
+      function initMap() {
+        var austin = {lat: 30.2672, lng: -97.7431};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 12,
+          center: austin
+        });
+        var marker = new google.maps.Marker({
+          position: austin,
+          map: map
+        });
+      }
+    </script> -->
+    <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmtXin7oAd31UpI6KzioQIdSNBqCQuKx8&callback=initMap" type="text/javascript"></script> -->
+    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmtXin7oAd31UpI6KzioQIdSNBqCQuKx8&callback=initMap" type="text/javascript"></script>
   </body>
 </html>
