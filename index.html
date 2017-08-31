@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>New 2 Austin</title>
+    <!--Import Google Icon Font-->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Compiled and minified CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!-- Compiled and minified JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+    <script type="text/javascript" src="app.js" defer></script>
+  </head>
+  <body>
+    <!-- navbar -->
+    <!-- /navbar -->
+    <div class="container">
+      <div class="row">
+        <!-- side navigation and user forms -->
+        <aside class="col s12 m4">
+          <h2>Refine Map Results</h2>
+          <div class="row">
+            <form>
+            <!-- <form class="col s12"> -->
+              <div class="input-field col s6 m12">
+                <input placeholder="2005 Willow Creek Dr..." id="address" type="text">
+                <label for="address">Address</label>
+              </div>
+              <div class="input-field col s6 m12">
+                <input placeholder="Uchi, University of Texas..." id="landmark" type="text">
+                <label for="landmark">Landmark</label>
+              </div>
+              <!-- <div class="input-field col s4 m12">
+                <p class="range-field">
+                  <input type="range" id="test5" min="0" max="100" />
+                  <label for="proximity">Select Proximity</label>
+                </p>
+              </div> -->
+              <div class="col s8 offset-s2 m12">
+                 <label>Materialize Range</label>
+                 <p class="range-field">
+                    <input type="range" id="test" min="0" max="100" />
+                 </p>
+              </div>
+              <div class="input-field col s6 m12">
+                <select multiple>
+                  <option value="1">Minor Misdemeanor</option>
+                  <option value="2">Drugs</option>
+                  <option value="3">Violent</option>
+                </select>
+                <label>Chose crime severity</label>
+              </div>
+              <div class="col s6 m12">
+                <label>Chose map type</label>
+                <div>
+                  <input name="group1" type="radio" id="test1" />
+                  <label for="test1">Heatmap</label>
+                  <input name="group1" type="radio" id="test2" />
+                  <label for="test2">Standard / Markers</label>
+                </div>
+              </div>
+            </form>
+          </div>
+        </aside>
+        <!-- /side navigation and user forms -->
+
+        <!-- map -->
+        <main class="col s12 m8">
+          <h2>Map Results</h2>
+          <img src="map.png" alt="">
+        </main>
+        <!-- /map -->
+      </div>
+    </div>
+  </body>
+</html>
