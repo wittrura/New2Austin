@@ -1,0 +1,33 @@
+{
+  "name": "new2austin",
+  "version": "1.0.0",
+  "description": "Web app to help new Austin residents find safe areas to live",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wittrura/New2Austin.git"
+  },
+  "keywords": [
+    "austin",
+    "safety",
+    "housing"
+  ],
+  "author": "Ryan Wittrup",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wittrura/New2Austin/issues"
+  },
+  "homepage": "https://github.com/wittrura/New2Austin#readme",
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.15.4"
+  },
+  "devDependencies": {
+    "request": "^2.81.0",
+    "tape": "^4.8.0"
+  }
+}
