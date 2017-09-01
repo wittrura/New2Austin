@@ -9,6 +9,7 @@ var locations = [
         {lat: 30.37243668, lng: -97.66574384}
 ];
 
+
 // instantiance map object with default properties
 function initMap() {
   var austin = {lat: 30.2672, lng: -97.7431};
@@ -34,5 +35,18 @@ function initMap() {
 
   // add a clusterer to manage the markers
   var markerCluster = new MarkerClusterer(map, markers,
-    {imagePath: 'https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/m'});
+    {imagePath: '../m'});
+
+  let heatmapData = [];
+
+  for (var i = 0; i < locations.length; i++) {
+    var latLng = new google.maps.LatLng(locations[i].lat, locations[i].lng);
+    heatmapData.push(latLng);
+  }
+
+  var heatmap = new google.maps.visualization.HeatmapLayer({
+     data: heatmapData,
+     dissipating: false,
+     map: map
+   });
 }

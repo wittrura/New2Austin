@@ -11,7 +11,6 @@
     <!-- Compiled and minified JavaScript -->
     <script src="https://code.jquery.com/jquery-3.2.1.js" integrity="sha256-DZAnKJ/6XZ9si04Hgrsxu/8s717jcIzLy3oi35EouyE=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
-
     <script type="text/javascript" src="/js/app.js"  defer></script>
   </head>
   <body>
@@ -41,6 +40,7 @@
               </div>
               <div class="input-field col s6 m12">
                 <select multiple>
+                  <option value="" disabled selected>Choose your option</option>
                   <option value="1">Minor Misdemeanor</option>
                   <option value="2">Drugs</option>
                   <option value="3">Violent</option>
@@ -69,21 +69,7 @@
         <!-- /map -->
       </div>
     </div>
-    <!-- <script>
-      function initMap() {
-        var austin = {lat: 30.2672, lng: -97.7431};
-        var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 12,
-          center: austin
-        });
-        var marker = new google.maps.Marker({
-          position: austin,
-          map: map
-        });
-      }
-    </script> -->
-    <!-- <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmtXin7oAd31UpI6KzioQIdSNBqCQuKx8&callback=initMap" type="text/javascript"></script> -->
-    <script src="https://developers.google.com/maps/documentation/javascript/examples/markerclusterer/markerclusterer.js"></script>
-    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmtXin7oAd31UpI6KzioQIdSNBqCQuKx8&callback=initMap" type="text/javascript"></script>
+    <script src="/js/markerclusterer.js"></script>
+    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmtXin7oAd31UpI6KzioQIdSNBqCQuKx8&libraries=visualization&callback=initMap" type="text/javascript"></script>
   </body>
 </html>
