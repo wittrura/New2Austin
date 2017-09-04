@@ -2,3 +2,10 @@
   height: 400px;
   width: 100%;
 }
+
+
+.btn-small {
+    height: 30px;
+    line-height: 30px;
+    padding: 0 0.5rem;
+}
