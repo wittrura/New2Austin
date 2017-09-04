@@ -1,13 +1,13 @@
 $(document).ready(function() {
     $('select').material_select();
 
-
     document.getElementById('landmark-btn').addEventListener('click', function() {
-          zoomToArea();
-        });
+      zoomToArea();
+    });
 
-    var zoomAutocomplete = new google.maps.places.Autocomplete(
-     document.getElementById('landmark'));
+    var zoomAutocomplete = new google.maps.places.Autocomplete(document.getElementById('landmark'));
+    // bias the boundaries within the map for the zoom to area text
+    zoomAutocomplete.bindTo('bounds', map);
 });
 
 var locations = [
@@ -71,7 +71,7 @@ function initMap() {
   //   type: ['gym']
   //  }, callback);
 
-  // 
+  //
   var request = {
     location: austin,
     radius: '500',
