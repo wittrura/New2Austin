@@ -2,7 +2,9 @@ $(document).ready(function() {
     $('select').material_select();
 
     document.getElementById('show-crimes').addEventListener('click', showCrimes);
-    document.getElementById('hide-crimes').addEventListener('click', hideCrimes);
+    document.getElementById('hide-crimes').addEventListener('click', function() {
+      hideMarkers(crimeMarkers);
+    });
     document.getElementById('toggle-drawing').addEventListener('click', function() {
       toggleDrawing(drawingManager);
     });
@@ -12,21 +14,38 @@ $(document).ready(function() {
     });
 
     document.getElementById('zoom-to-places-go').addEventListener('click', zoomToPlaces);
-    
+
 
     let zoomAutocomplete = new google.maps.places.Autocomplete(document.getElementById('zoom-to-places'));
     zoomAutocomplete.bindTo('bounds', map);
 
+    // search box, more wide-reaching version of autocomplete. able to search places
+    // bias the SearchBox results towards current map's viewport.
     let searchBox = new google.maps.places.SearchBox(document.getElementById('search-nearby-places'));
     searchBox.setBounds(map.getBounds());
+    map.addListener('bounds_changed', function() {
+      searchBox.setBounds(map.getBounds());
+    });
+
+    // listen for user selecting a suggested place and clicking directly
+    searchBox.addListener('places_changed', function() {
+      searchBoxPlaces(this);
+    });
+
+    // listen for user clicking go when searching for places
+    document.getElementById('search-nearby-places-go').addEventListener('click', textSearchPlaces);
+
 });
 
 
 // instantiate map, blank array for all crimes markers
 let map = null;
-let markers = [];
+let crimeMarkers = [];
 let drawingManager = null;
 let polygon = null;
+
+// separate from crime markers, these will be for searching places
+let placeMarkers = [];
 
 
 // intialize map object with default properties
@@ -62,7 +81,7 @@ function initMap() {
         id: i
       });
       // add to markers array
-      markers.push(marker);
+      crimeMarkers.push(marker);
 
       // add listeners to open infowindow with crime details on click
       marker.addListener('click', function() {
@@ -110,16 +129,17 @@ function showCrimes() {
   // instantiate map boundaries
   let bounds = new google.maps.LatLngBounds();
 
-  for (var i = 0; i < markers.length; i++) {
-    markers[i].setMap(map);
+  for (var i = 0; i < crimeMarkers.length; i++) {
+    crimeMarkers[i].setMap(map);
     // extend map boundaries for each marker
-    bounds.extend(markers[i].position);
+    bounds.extend(crimeMarkers[i].position);
   }
   // update map to new boundaries
   map.fitBounds(bounds);
 }
 
-function hideCrimes() {
+// hides arrays of markers
+function hideMarkers(markers) {
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(null);
   }
@@ -145,7 +165,7 @@ function activateDrawingMarkers(event) {
   // if there is an existing polygon, get rid of it and remove the markers
   if (polygon) {
     polygon.setMap(null);
-    hideCrimes();
+    hideMarkers(crimeMarkers);
   }
   // switch drawing mode to HAND and end drawing
   drawingManager.setDrawingMode(null);
@@ -163,11 +183,11 @@ function activateDrawingMarkers(event) {
 
 // hides all markers outside polygon, and shows markers within
 function searchWithinPolygon() {
-  for (var i = 0; i < markers.length; i++) {
-    if (google.maps.geometry.poly.containsLocation(markers[i].position, polygon)) {
-      markers[i].setMap(map);
+  for (var i = 0; i < crimeMarkers.length; i++) {
+    if (google.maps.geometry.poly.containsLocation(crimeMarkers[i].position, polygon)) {
+      crimeMarkers[i].setMap(map);
     } else {
-      markers[i].setMap(null);
+      crimeMarkers[i].setMap(null);
     }
   }
 }
@@ -198,4 +218,66 @@ function zoomToPlaces() {
       }
     });
   }
+}
+
+
+// executes if user enters text to search places and clicks a suggestion
+function searchBoxPlaces(searchBox) {
+  hideMarkers(placeMarkers);
+
+  let places = searchBox.getPlaces();
+  createMarkersForPlaces(places);
+
+  if (places.length === 0) {
+    window.alert('We did not find any places matching that request');
+  }
+}
+
+// executes if user enters text to search places and clicks 'go'
+function textSearchPlaces() {
+  let bounds = map.getBounds();
+  hideMarkers(placeMarkers);
+
+  let placesService = new google.maps.places.PlacesService(map);
+  let searchText = document.getElementById('search-nearby-places').value;
+  placesService.textSearch({
+    // radius: 500,
+    query: searchText,
+    bounds: bounds
+  }, function(results, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      createMarkersForPlaces(results);
+    }
+  });
+}
+
+
+function createMarkersForPlaces(places) {
+  let bounds = new google.maps.LatLngBounds();
+  for (var i = 0; i < places.length; i++) {
+    let place = places[i];
+    let icon = {
+      url: place.icon,
+      size: new google.maps.Size(35, 35),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(15, 34),
+      scaledSize: new google.maps.Size(25, 25)
+    };
+
+    let marker = new google.maps.Marker({
+      map: map,
+      icon: icon,
+      title: place.name,
+      position: place.geometry.location,
+      id: place.id
+    });
+    placeMarkers.push(marker);
+
+    if (place.geometry.viewport) {
+      bounds.union(place.geometry.viewport);
+    } else {
+      bounds.extend(place.geometry.location);
+    }
+  }
+  map.fitBounds(bounds);
 }
