@@ -29,8 +29,8 @@ json.data.forEach((datum) => {
     crimeType: datum[9],
     date: datum[10],
     address: datum[13],
-    location: {lat: datum[15],
-               lng: datum[14]
+    location: {lat: Number.parseFloat(datum[15]),
+               lng: Number.parseFloat(datum[14])
              }
   });
 });
@@ -43,6 +43,7 @@ cleanData.forEach((incident) => {
   }
 });
 
+// return ONLY incidents with a lat, lng
 app.get('/json', function(request, response) {
   response.writeHead(200, {"Content-Type": "application/json"});
   let json = JSON.stringify(incidentsLatLng);

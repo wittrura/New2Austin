@@ -13,21 +13,12 @@ $(document).ready(function() {
 });
 
 
-// MOCK DATA
-// TODO replace with real crime objects - lat, lng, crime type
-let locations = [
-  {location: {lat: 30.3312282, lng: -97.62328346}, crimeType: 'ROBBERY BY ASSAULT', date: '06/04/2016'},
-  {location: {lat: 30.38949131, lng: -97.64854574}, crimeType:'HARASSMENT', date: '02/06/2016'},
-  {location: {lat: 30.30960673, lng: -97.65506085}, crimeType:'POSS CONTROLLED SUB/NARCOT', date: '08/08/2016'},
-  {location: {lat: 30.37243668, lng: -97.66574384}, crimeType:'PUBLIC INTOXICATION', date: '08/06/2016'}
-];
-
-
 // instantiate map, blank array for all crimes markers
 let map = null;
 let markers = [];
 let drawingManager = null;
 let polygon = null;
+
 
 // intialize map object with default properties
 function initMap() {
@@ -42,26 +33,35 @@ function initMap() {
   // instantiate infowindow
   let largeInfowindow = new google.maps.InfoWindow();
 
-  // loop through locations array to create markers for crimes on initialization
-  for (var i = 0; i < locations.length; i++) {
-    let position = locations[i].location;
-    let title = locations[i].crimeType;
 
-    // create a new marker for each location
-    let marker = new google.maps.Marker({
-      position: position,
-      title: title,
-      animation: google.maps.Animation.DROP,
-      id: i
-    });
-    // add to markers array
-    markers.push(marker);
+  let locations = null;
+  // request crime locations from API endpoint
+  $.get('http://localhost:5000/json', function(data) {
+    locations = data;
+  }).done(function() {
+    // loop through locations array to create markers for crimes on initialization
+    // TODO - only loading 50 crimes based on response times, update to locations.length
+    for (var i = 0; i < 50; i++) {
+      let position = locations[i].location;
+      let title = locations[i].crimeType;
 
-    // add listeners to open infowindow with crime details on click
-    marker.addListener('click', function() {
-      populateInfoWindow(this, largeInfowindow);
-    });
-  }
+      // create a new marker for each location
+      let marker = new google.maps.Marker({
+        position: position,
+        title: title,
+        animation: google.maps.Animation.DROP,
+        id: i
+      });
+      // add to markers array
+      markers.push(marker);
+
+      // add listeners to open infowindow with crime details on click
+      marker.addListener('click', function() {
+        populateInfoWindow(this, largeInfowindow);
+      });
+    }
+  });
+
 
   // initialize the drawing manager
   drawingManager = new google.maps.drawing.DrawingManager({
