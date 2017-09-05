@@ -20,6 +20,7 @@ json.data.forEach((datum) => {
              }
   });
 });
+console.log(cleanData[0]);
 
 // create separate array for incidents with lat/lng for easier use on google
 let incidentsLatLng = [];
