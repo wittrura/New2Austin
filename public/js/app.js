@@ -41,7 +41,7 @@ function initMap() {
   }).done(function() {
     // loop through locations array to create markers for crimes on initialization
     // TODO - only loading 50 crimes based on response times, update to locations.length
-    for (var i = 0; i < 50; i++) {
+    for (var i = 0; i < 10; i++) {
       let position = locations[i].location;
       let title = locations[i].crimeType;
 

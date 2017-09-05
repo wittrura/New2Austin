@@ -22,6 +22,7 @@ app.get('/', function(request, response) {
 // with only the required fields
 var json = JSON.parse(fs.readFileSync('./public/apd_ytd.json', 'utf8'));
 
+// get all incidents with relevant data
 let cleanData = [];
 json.data.forEach((datum) => {
   cleanData.push({
@@ -35,7 +36,8 @@ json.data.forEach((datum) => {
   });
 });
 
-// create separate array for incidents with lat/lng for easier use on google
+// create separate array for incidents but ONLY if
+// lat/lng are present, for easier use on google
 let incidentsLatLng = [];
 cleanData.forEach((incident) => {
   if (incident.location.lat && incident.location.lng) {
@@ -47,6 +49,13 @@ cleanData.forEach((incident) => {
 app.get('/json', function(request, response) {
   response.writeHead(200, {"Content-Type": "application/json"});
   let json = JSON.stringify(incidentsLatLng);
+
+  response.end(json);
+});
+
+app.get('/jsonFull', function(request, response) {
+  response.writeHead(200, {"Content-Type": "application/json"});
+  let json = JSON.stringify(cleanData);
 
   response.end(json);
 });
