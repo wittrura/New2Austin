@@ -3,7 +3,13 @@ $(document).ready(function() {
 
     document.getElementById('show-crimes').addEventListener('click', showCrimes);
     document.getElementById('hide-crimes').addEventListener('click', hideCrimes);
+    document.getElementById('toggle-drawing').addEventListener('click', function() {
+      toggleDrawing(drawingManager);
+    });
 
+    drawingManager.addListener('overlaycomplete', function(e) {
+      activateDrawingMarkers(e);
+    });
 });
 
 
@@ -20,7 +26,8 @@ let locations = [
 // instantiate map, blank array for all crimes markers
 let map = null;
 let markers = [];
-
+let drawingManager = null;
+let polygon = null;
 
 // intialize map object with default properties
 function initMap() {
@@ -30,6 +37,7 @@ function initMap() {
     zoom: 10,
     center: AUSTIN
   });
+
 
   // instantiate infowindow
   let largeInfowindow = new google.maps.InfoWindow();
@@ -54,6 +62,18 @@ function initMap() {
       populateInfoWindow(this, largeInfowindow);
     });
   }
+
+  // initialize the drawing manager
+  drawingManager = new google.maps.drawing.DrawingManager({
+    drawingMode: google.maps.drawing.OverlayType.POLYGON,
+    drawingControl: true,
+    drawingControlOptions: {
+      position: google.maps.ControlPosition.TOP_LEFT,
+      drawingModes: [
+        google.maps.drawing.OverlayType.POLYGON
+      ]
+    }
+  });
 
 }
 
@@ -92,5 +112,48 @@ function showCrimes() {
 function hideCrimes() {
   for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(null);
+  }
+}
+
+
+// shows and hides drawing options
+function toggleDrawing(drawingManger) {
+  if (drawingManager.map) {
+    drawingManager.setMap(null);
+  } else {
+    drawingManager.setMap(map);
+  }
+}
+
+
+// handles
+function activateDrawingMarkers(event) {
+  // if there is an existing polygon, get rid of it and remove the markers
+  if (polygon) {
+    polygon.setMap(null);
+    hideCrimes();
+  }
+  // switch drawing mode to HAND and end drawing
+  drawingManager.setDrawingMode(null);
+
+  // update polygon based on the event overlay
+  polygon = event.overlay;
+  polygon.setEditable(true);
+
+  // search area inside polygon, and redo search if it is changed
+  searchWithinPolygon();
+  polygon.getPath().addListener('set_at', searchWithinPolygon);
+  polygon.getPath().addListener('insert_at', searchWithinPolygon);
+}
+
+
+// hides all markers outside polygon, and shows markers within
+function searchWithinPolygon() {
+  for (var i = 0; i < markers.length; i++) {
+    if (google.maps.geometry.poly.containsLocation(markers[i].position, polygon)) {
+      markers[i].setMap(map);
+    } else {
+      markers[i].setMap(null);
+    }
   }
 }

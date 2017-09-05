@@ -33,6 +33,15 @@
               <!-- </div> -->
             </div>
 
+            <div class="col s12"><hr></div>
+
+            <div class="col s12">
+                <p>Draw a shape to search the area within it</p>
+                <input type="submit" class="waves-effect waves-light btn btn-small" id="toggle-drawing" value="Drawing Tools">
+            </div>
+
+            <div class="col s12"><hr></div>
+
             <div class="input-field col s6">
               <select id="max-duration">
                 <option value="" disabled selected>Duration</option>
@@ -63,9 +72,7 @@
               <input class="waves-effect waves-light btn btn-small" id="search-within-time-go" type="button" value="Go">
             </div>
 
-            <div class="col s12">
-              <hr>
-            </div>
+            <div class="col s12"><hr></div>
 
             <div class="input-field col s8">
               <input placeholder="Uchi, University of Texas..." id="search-places" type="text">
@@ -83,9 +90,7 @@
                </p>
             </div> -->
 
-            <div class="col s12">
-              <hr>
-            </div>
+            <div class="col s12"><hr></div>
 
             <div class="input-field col s6 m12">
               <select multiple>
@@ -97,9 +102,7 @@
               <label>Choose crime severity</label>
             </div>
 
-            <div class="col s12">
-              <hr>
-            </div>
+            <div class="col s12"><hr></div>
 
             <div class="col s6 m12">
               <label>Choose map type</label>
@@ -123,6 +126,6 @@
       </div>
     </div>
     <script src="/js/markerclusterer.js"></script>
-    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmtXin7oAd31UpI6KzioQIdSNBqCQuKx8&libraries=places,visualization&callback=initMap" type="text/javascript"></script>
+    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmtXin7oAd31UpI6KzioQIdSNBqCQuKx8&libraries=drawing,geometry&callback=initMap" type="text/javascript"></script>
   </body>
 </html>
