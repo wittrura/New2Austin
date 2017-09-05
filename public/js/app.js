@@ -10,6 +10,8 @@ $(document).ready(function() {
     drawingManager.addListener('overlaycomplete', function(e) {
       activateDrawingMarkers(e);
     });
+
+    document.getElementById('zoom-to-places-go').addEventListener('click', zoomToPlaces);
 });
 
 
@@ -159,5 +161,32 @@ function searchWithinPolygon() {
     } else {
       markers[i].setMap(null);
     }
+  }
+}
+
+
+//
+function zoomToPlaces() {
+  // get user entered address
+  let geocoder = new google.maps.Geocoder();
+  let address = document.getElementById('zoom-to-places').value;
+
+  if (address == '') {
+    window.alert('Please enter an area, place, or address');
+  } else {
+
+    // geocode it to get lat lng
+    geocoder.geocode({
+      address: address,
+      componentRestrictions: {locality: 'Texas'}
+    }, function(results, status) {
+      if (status == 'OK') {
+        // if response is successful, update map center and zoom in
+        map.setCenter(results[0].geometry.location);
+        map.setZoom(14);
+      } else {
+
+      }
+    });
   }
 }
