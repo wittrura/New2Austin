@@ -120,6 +120,10 @@ function hideCrimes() {
 function toggleDrawing(drawingManger) {
   if (drawingManager.map) {
     drawingManager.setMap(null);
+    if (polygon) {
+      // removes polygon but leaves markers
+      polygon.setMap(null);
+    }
   } else {
     drawingManager.setMap(map);
   }
