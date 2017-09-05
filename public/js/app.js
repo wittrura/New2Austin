@@ -12,6 +12,13 @@ $(document).ready(function() {
     });
 
     document.getElementById('zoom-to-places-go').addEventListener('click', zoomToPlaces);
+    
+
+    let zoomAutocomplete = new google.maps.places.Autocomplete(document.getElementById('zoom-to-places'));
+    zoomAutocomplete.bindTo('bounds', map);
+
+    let searchBox = new google.maps.places.SearchBox(document.getElementById('search-nearby-places'));
+    searchBox.setBounds(map.getBounds());
 });
 
 
@@ -97,6 +104,7 @@ function populateInfoWindow(marker, infowindow) {
   }
 }
 
+
 // loop through markers and display all
 function showCrimes() {
   // instantiate map boundaries
@@ -132,7 +140,7 @@ function toggleDrawing(drawingManger) {
 }
 
 
-// handles
+// handles drawing tools
 function activateDrawingMarkers(event) {
   // if there is an existing polygon, get rid of it and remove the markers
   if (polygon) {
@@ -165,12 +173,12 @@ function searchWithinPolygon() {
 }
 
 
-//
+// update map view based on user input for a specific address, area, or place
 function zoomToPlaces() {
-  // get user entered address
   let geocoder = new google.maps.Geocoder();
   let address = document.getElementById('zoom-to-places').value;
 
+  // prompt if input box is empty
   if (address == '') {
     window.alert('Please enter an area, place, or address');
   } else {
@@ -183,9 +191,10 @@ function zoomToPlaces() {
       if (status == 'OK') {
         // if response is successful, update map center and zoom in
         map.setCenter(results[0].geometry.location);
+        console.log(results[0]);
         map.setZoom(14);
       } else {
-
+        window.alert('There was an error connecting to the server. Please try again');
       }
     });
   }
