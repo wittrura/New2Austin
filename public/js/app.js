@@ -91,6 +91,8 @@ function initMap() {
   });
 
 
+
+
   // initialize the drawing manager
   drawingManager = new google.maps.drawing.DrawingManager({
     drawingMode: google.maps.drawing.OverlayType.POLYGON,
@@ -134,6 +136,10 @@ function showCrimes() {
     // extend map boundaries for each marker
     bounds.extend(crimeMarkers[i].position);
   }
+
+  // clusters for better viewing
+  var markerCluster = new MarkerClusterer(map, crimeMarkers, {imagePath: '../m'});
+
   // update map to new boundaries
   map.fitBounds(bounds);
 }
