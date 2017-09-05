@@ -1,6 +1,8 @@
 $(document).ready(function() {
     $('select').material_select();
 
+    document.getElementById('show-crimes').addEventListener('click', showCrimes);
+    document.getElementById('hide-crimes').addEventListener('click', hideCrimes);
 
 });
 
@@ -15,13 +17,12 @@ let locations = [
 ];
 
 
+// instantiate map, blank array for all crimes markers
 let map = null;
-
-// intialize blank array for all crimes markers
 let markers = [];
 
 
-// instantiance map object with default properties
+// intialize map object with default properties
 function initMap() {
   const AUSTIN = {lat: 30.2672, lng: -97.7431};
   // set high level zoom on austin - higher zoom number is lower to the ground
@@ -30,9 +31,8 @@ function initMap() {
     center: AUSTIN
   });
 
-  // initialize infowindow, and map boundaries
+  // instantiate infowindow
   let largeInfowindow = new google.maps.InfoWindow();
-  let bounds = new google.maps.LatLngBounds();
 
   // loop through locations array to create markers for crimes on initialization
   for (var i = 0; i < locations.length; i++) {
@@ -42,7 +42,6 @@ function initMap() {
     // create a new marker for each location
     let marker = new google.maps.Marker({
       position: position,
-      map: map,
       title: title,
       animation: google.maps.Animation.DROP,
       id: i
@@ -50,18 +49,14 @@ function initMap() {
     // add to markers array
     markers.push(marker);
 
-    // extend map boundaries for each marker
-    bounds.extend(marker.position);
-
     // add listeners to open infowindow with crime details on click
     marker.addListener('click', function() {
       populateInfoWindow(this, largeInfowindow);
     });
   }
-  // update map to new boundaries
-  map.fitBounds(bounds);
 
 }
+
 
 // populates infowindow when a marker is clicked
 // only one infowindow allowed open at a time
@@ -77,5 +72,25 @@ function populateInfoWindow(marker, infowindow) {
     infowindow.addListener('closeclick', function() {
       infowindow.marker = null;
     });
+  }
+}
+
+// loop through markers and display all
+function showCrimes() {
+  // instantiate map boundaries
+  let bounds = new google.maps.LatLngBounds();
+
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(map);
+    // extend map boundaries for each marker
+    bounds.extend(markers[i].position);
+  }
+  // update map to new boundaries
+  map.fitBounds(bounds);
+}
+
+function hideCrimes() {
+  for (var i = 0; i < markers.length; i++) {
+    markers[i].setMap(null);
   }
 }
