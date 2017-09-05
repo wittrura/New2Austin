@@ -43,6 +43,7 @@ let map = null;
 let crimeMarkers = [];
 let drawingManager = null;
 let polygon = null;
+let heatMapData = [];
 
 // separate from crime markers, these will be for searching places
 let placeMarkers = [];
@@ -87,10 +88,12 @@ function initMap() {
       marker.addListener('click', function() {
         populateInfoWindow(this, largeInfowindow);
       });
+
+      // console.log(locations[i].location.lat);
+      let latLng = new google.maps.LatLng(locations[i].location.lat, locations[i].location.lng);
+      heatMapData.push(latLng);
     }
   });
-
-
 
 
   // initialize the drawing manager
@@ -138,7 +141,17 @@ function showCrimes() {
   }
 
   // clusters for better viewing
-  var markerCluster = new MarkerClusterer(map, crimeMarkers, {imagePath: '../m'});
+  // var markerCluster = new MarkerClusterer(map, crimeMarkers, {imagePath: '../m'});
+
+  //
+  var heatmap = new google.maps.visualization.HeatmapLayer({
+    data: heatMapData,
+    dissipating: false,
+    map: map,
+    radius: 1,
+    opacity: .5
+  });
+
 
   // update map to new boundaries
   map.fitBounds(bounds);
