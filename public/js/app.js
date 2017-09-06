@@ -35,20 +35,15 @@ $(document).ready(function() {
     // listen for user clicking go when searching for places
     document.getElementById('search-nearby-places-go').addEventListener('click', textSearchPlaces);
 
+    //
+    document.getElementById('toggleStandard').addEventListener('click', toggleStandard);
+    document.getElementById('toggleCluster').addEventListener('click', toggleCluster);
+    document.getElementById('toggleHeatmap').addEventListener('click', toggleHeatmap);
 
     //
-    document.getElementById('toggleStandard').addEventListener('click', function() {
-      toggleStandard();
+    document.getElementById('crimeType-go').addEventListener('click', function(e) {
+      filterCrimeMarkersType(document.getElementById('crimeType').value);
     });
-    //
-    document.getElementById('toggleCluster').addEventListener('click', function() {
-      toggleCluster();
-    });
-    //
-    document.getElementById('toggleHeatmap').addEventListener('click', function() {
-      toggleHeatmap();
-    });
-
 });
 
 
@@ -58,16 +53,19 @@ let crimeMarkers = [];
 let drawingManager = null;
 let polygon = null;
 
-
+//
 let markerCluster = null;
+
+//
 let heatMap = null;
-
-
 let heatMapData = [];
-
 
 // separate from crime markers, these will be for searching places
 let placeMarkers = [];
+
+
+// to store full list of data from API
+let locations = null;
 
 
 // intialize map object with default properties
@@ -79,12 +77,10 @@ function initMap() {
     center: AUSTIN
   });
 
-
   // instantiate infowindow
   let largeInfowindow = new google.maps.InfoWindow();
 
 
-  let locations = null;
   // request crime locations from API endpoint
   $.get('http://localhost:5000/json', function(data) {
     locations = data;
@@ -113,6 +109,7 @@ function initMap() {
       // console.log(locations[i].location.lat);
       let latLng = new google.maps.LatLng(locations[i].location.lat, locations[i].location.lng);
       heatMapData.push(latLng);
+
     }
   });
 
@@ -320,22 +317,84 @@ function createMarkersForPlaces(places) {
 }
 
 
-//
+// hide and show markers as different views
+// options are standard, clustered, or heatmap
+// disables other views before setting to a new one
 function toggleHeatmap() {
   hideMarkers(crimeMarkers);
   markerCluster.clearMarkers();
   heatmap.setMap(map);
 }
-//
+
 function toggleCluster() {
   hideMarkers(crimeMarkers);
   heatmap.setMap(null);
   markerCluster = new MarkerClusterer(map, crimeMarkers, {imagePath: '../m'});
   showCrimes();
 }
-//
+
 function toggleStandard() {
   markerCluster.clearMarkers();
   heatmap.setMap(null);
   showCrimes();
+}
+
+
+// filter the full locations array of all crimes by crime type
+function filterCrimeMarkersType(crimeCode) {
+  let filteredLocations = [];
+
+  // default case, to return all locations unfiltered
+  if (crimeCode === '7') {
+    return locations;
+  }
+
+  // push to filtered array based on crime code
+  locations.forEach(function(location) {
+    switch (crimeCode) {
+      // sex and rape
+      case '1':
+        // console.log('matched case 1');
+        if (location.crimeType.search(/sex|rape/i) > -1) {
+          // console.log('matched search term');
+          filteredLocations.push(location);
+        }
+        break;
+      // theft and burglary
+      case '2':
+        if (location.crimeType.search(/burgl|theft|tress/i) > -1) {
+          filteredLocations.push(location);
+        }
+        break;
+      // assault
+      case '3':
+        if (location.crimeType.search(/assault|aslt/i) > -1) {
+          filteredLocations.push(location);
+        }
+        break;
+      // possession
+      case '4':
+        if (location.crimeType.search(/poss/i) > -1) {
+          filteredLocations.push(location);
+        }
+        break;
+      // driving
+      case '5':
+        if (location.crimeType.search(/dui|dwi|driving/i) > -1) {
+          filteredLocations.push(location);
+        }
+        break;
+      // other
+      case '6':
+      default:
+        filteredLocations.push(location);
+    }
+  });
+  console.log(filteredLocations);
+  return filteredLocations;
+}
+
+// updates array of crime markers after filtering by type or date
+function updateCrimeMarkers() {
+
 }

@@ -70,15 +70,25 @@
             <div class="col s12"><hr></div>
 
 
-            <div class="input-field col s6 m12">
-              <select multiple>
-                <option value="" disabled selected>Choose your option</option>
-                <option value="1">Minor Misdemeanor</option>
-                <option value="2">Drugs</option>
-                <option value="3">Violent</option>
-              </select>
-              <label>Choose crime severity</label>
-            </div>
+            <!-- <div class="input-field col s6 m12"> -->
+              <div class="input-field col s8">
+                <select id="crimeType">
+                  <option value="" disabled selected>Choose your option</option>
+                  <option value="1">Sexual Assault, Rape</option>
+                  <option value="2">Theft and Burglary</option>
+                  <option value="3">Assault</option>
+                  <option value="4">Possession</option>
+                  <option value="5">Driving and Auto</option>
+                  <option value="6">Other</option>
+                  <option value="7">All</option>
+                </select>
+                <label>Choose crime severity</label>
+
+              </div>
+              <div class="input-field col s4">
+                <input class="waves-effect waves-light btn btn-small right" id="crimeType-go" type="button" value="Update">
+              </div>
+            <!-- </div> -->
 
 
             <div class="col s12"><hr></div>
