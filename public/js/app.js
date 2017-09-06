@@ -35,6 +35,20 @@ $(document).ready(function() {
     // listen for user clicking go when searching for places
     document.getElementById('search-nearby-places-go').addEventListener('click', textSearchPlaces);
 
+
+    //
+    document.getElementById('toggleStandard').addEventListener('click', function() {
+      toggleStandard();
+    });
+    //
+    document.getElementById('toggleCluster').addEventListener('click', function() {
+      toggleCluster();
+    });
+    //
+    document.getElementById('toggleHeatmap').addEventListener('click', function() {
+      toggleHeatmap();
+    });
+
 });
 
 
@@ -43,7 +57,14 @@ let map = null;
 let crimeMarkers = [];
 let drawingManager = null;
 let polygon = null;
+
+
+let markerCluster = null;
+let heatMap = null;
+
+
 let heatMapData = [];
+
 
 // separate from crime markers, these will be for searching places
 let placeMarkers = [];
@@ -108,6 +129,16 @@ function initMap() {
     }
   });
 
+  // initialize heatmap layer
+  heatmap = new google.maps.visualization.HeatmapLayer({
+    data: heatMapData,
+    dissipating: true,
+    map: map,
+    radius: 50,
+    opacity: .5
+  });
+  heatmap.setMap(null);
+
 }
 
 
@@ -139,19 +170,6 @@ function showCrimes() {
     // extend map boundaries for each marker
     bounds.extend(crimeMarkers[i].position);
   }
-
-  // clusters for better viewing
-  // var markerCluster = new MarkerClusterer(map, crimeMarkers, {imagePath: '../m'});
-
-  //
-  var heatmap = new google.maps.visualization.HeatmapLayer({
-    data: heatMapData,
-    dissipating: false,
-    map: map,
-    radius: 1,
-    opacity: .5
-  });
-
 
   // update map to new boundaries
   map.fitBounds(bounds);
@@ -299,4 +317,25 @@ function createMarkersForPlaces(places) {
     }
   }
   map.fitBounds(bounds);
+}
+
+
+//
+function toggleHeatmap() {
+  hideMarkers(crimeMarkers);
+  markerCluster.clearMarkers();
+  heatmap.setMap(map);
+}
+//
+function toggleCluster() {
+  hideMarkers(crimeMarkers);
+  heatmap.setMap(null);
+  markerCluster = new MarkerClusterer(map, crimeMarkers, {imagePath: '../m'});
+  showCrimes();
+}
+//
+function toggleStandard() {
+  markerCluster.clearMarkers();
+  heatmap.setMap(null);
+  showCrimes();
 }

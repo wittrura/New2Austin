@@ -40,39 +40,9 @@
                 <input type="submit" class="waves-effect waves-light btn btn-small" id="toggle-drawing" value="Drawing Tools">
             </div>
 
+
             <div class="col s12"><hr></div>
 
-            <!-- <div class="input-field col s6">
-              <select id="duration">
-                <option value="" disabled selected>Duration</option>
-                <option value="10">10 min</option>
-                <option value="15">15 min</option>
-                <option value="30">30 min</option>
-                <option value="60">60 min</option>
-              </select>
-              <label>Within</label>
-
-            </div>
-            <div class="input-field col s6">
-              <select id="mode">
-                <option value="" disabled selected>Transit type</option>
-                <option value="DRIVING">drive</option>
-                <option value="WALKING">walk</option>
-                <option value="BICYCLING">bike</option>
-                <option value="TRANSIT">transit ride</option>
-              </select>
-            <label></label>
-            </div>
-
-            <div class="input-field col s8">
-              <input placeholder="2005 Willow Creek Dr..." id="search-within-time" type="text">
-              <label for="address">of Address</label>
-            </div>
-            <div class="input-field col s4">
-              <input class="waves-effect waves-light btn btn-small" id="search-within-time-go" type="button" value="Go">
-            </div>
-
-            <div class="col s12"><hr></div> -->
 
             <div class="input-field col s8">
               <input placeholder="Uchi, University of Texas..." id="zoom-to-places" type="text">
@@ -96,14 +66,9 @@
               <input class="waves-effect waves-light btn btn-small right" id="search-nearby-places-go" type="button" value="Go">
             </div>
 
-            <!-- <div class="col s8 offset-s2 m12">
-               <label>Search Radius</label>
-               <p class="range-field">
-                  <input type="range" id="test" min="0" max="100" />
-               </p>
-            </div> -->
 
             <div class="col s12"><hr></div>
+
 
             <div class="input-field col s6 m12">
               <select multiple>
@@ -115,16 +80,26 @@
               <label>Choose crime severity</label>
             </div>
 
+
             <div class="col s12"><hr></div>
 
+
             <div class="col s6 m12">
-              <label>Choose map type</label>
-              <div>
-                <input name="group1" type="radio" id="test1" />
-                <label for="test1">Heatmap</label>
-                <input name="group1" type="radio" id="test2" />
-                <label for="test2">Standard / Markers</label>
-              </div>
+              <form action="#">
+                <label>Choose Map Type</label>
+                <p>
+                  <input name="group1" type="radio" id="toggleStandard" checked='checked'/>
+                  <label for="toggleStandard">Standard</label>
+                </p>
+                <p>
+                  <input name="group1" type="radio" id="toggleCluster" />
+                  <label for="toggleCluster">Cluster</label>
+                </p>
+                <p>
+                  <input name="group1" type="radio" id="toggleHeatmap"  />
+                  <label for="toggleHeatmap">Heatmap</label>
+                </p>
+              </form>
             </div>
           </div>
         </aside>
