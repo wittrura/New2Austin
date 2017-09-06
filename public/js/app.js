@@ -2,9 +2,10 @@ $(document).ready(function() {
     $('select').material_select();
 
     document.getElementById('show-crimes').addEventListener('click', showCrimes);
-    document.getElementById('hide-crimes').addEventListener('click', function() {
-      hideMarkers(crimeMarkers);
-    });
+    // document.getElementById('hide-crimes').addEventListener('click', function() {
+    //   hideMarkers(crimeMarkers);
+    // });
+    document.getElementById('hide-crimes').addEventListener('click', resetMarkers);
 
     document.getElementById('toggle-drawing').addEventListener('click', function() {
       toggleDrawing(drawingManager);
@@ -98,7 +99,8 @@ function initMap() {
         title: title,
         animation: google.maps.Animation.DROP,
         id: i,
-        date: new Date(locations[i].date * 1000)
+        date: new Date(locations[i].date * 1000),
+        reportNum: locations[i].reportNum
       });
       // add to markers array
       crimeMarkers.push(marker);
@@ -146,10 +148,15 @@ function initMap() {
 function populateInfoWindow(marker, infowindow) {
   // check that the infowindow is not already opened on this marker
   if (infowindow.marker != marker) {
+    let formattedReportNum = `${marker.reportNum.substring(0,4)}-${marker.reportNum.substring(4)}`
     infowindow.marker = marker;
     infowindow.setContent(`
       <div>${marker.title}</div>
-      <div>${marker.date}</div>
+      <div>Date: ${marker.date}</div>
+      <div>Report Number:
+        <a target='_blank' href='https://www.ci.austin.tx.us/police/reports/search2.cfm?choice=caseno&caseno=${formattedReportNum}&Submit=Submit'>
+        ${formattedReportNum}</a>
+      </div>
       `);
     infowindow.open(map, marker);
 
@@ -162,7 +169,7 @@ function populateInfoWindow(marker, infowindow) {
 
 
 // loop through markers and display all
-function showCrimes() {
+function showCrimes(fitBounds = true) {
   // instantiate map boundaries
   let bounds = new google.maps.LatLngBounds();
 
@@ -173,7 +180,9 @@ function showCrimes() {
   }
 
   // update map to new boundaries
-  map.fitBounds(bounds);
+  if (fitBounds) {
+    map.fitBounds(bounds);
+  }
 }
 
 // hides arrays of markers
@@ -243,8 +252,7 @@ function zoomToPlaces() {
 
     // geocode it to get lat lng
     geocoder.geocode({
-      address: address,
-      componentRestrictions: {locality: 'Texas'}
+      address: address
     }, function(results, status) {
       if (status == 'OK') {
         // if response is successful, update map center and zoom in
@@ -278,7 +286,9 @@ function textSearchPlaces() {
   let placesService = new google.maps.places.PlacesService(map);
   let searchText = document.getElementById('search-nearby-places').value;
   placesService.textSearch({
-    // radius: 500,
+    // bias the search to be within 1000m of the center of the map
+    location: map.getCenter(),
+    radius: 1000,
     query: searchText,
     bounds: bounds
   }, function(results, status) {
@@ -322,24 +332,30 @@ function createMarkersForPlaces(places) {
 
 // hide and show markers as different views
 // options are standard, clustered, or heatmap
-// disables other views before setting to a new one
+// resets view before setting to a new one
 function toggleHeatmap() {
-  hideMarkers(crimeMarkers);
-  markerCluster.clearMarkers();
+  resetMarkers();
   heatmap.setMap(map);
 }
 
 function toggleCluster() {
-  hideMarkers(crimeMarkers);
-  heatmap.setMap(null);
+  resetMarkers();
   markerCluster = new MarkerClusterer(map, crimeMarkers, {imagePath: '../m'});
-  showCrimes();
+  showCrimes(false);
 }
 
 function toggleStandard() {
-  markerCluster.clearMarkers();
+  resetMarkers();
+  showCrimes(false);
+}
+
+// disable layers and hides crimeMarkers
+function resetMarkers() {
+  hideMarkers(crimeMarkers);
+  if (markerCluster) {
+    markerCluster.clearMarkers();
+  }
   heatmap.setMap(null);
-  showCrimes();
 }
 
 
@@ -399,9 +415,7 @@ function filterCrimeMarkersType(crimeCode) {
 // updates array of crime markers after filtering by type or date
 function updateCrimeMarkers(newLocations) {
   // sets all individual markers to not be assigned to a map
-  for (var i = 0; i < crimeMarkers.length; i++) {
-    crimeMarkers[i].setMap(null);
-  }
+  hideMarkers(crimeMarkers);
   // remove all references to previous markers, full delete
   crimeMarkers = [];
 
@@ -415,7 +429,8 @@ function updateCrimeMarkers(newLocations) {
       title: title,
       animation: google.maps.Animation.DROP,
       id: i,
-      date: new Date(newLocations[i].date * 1000)
+      date: new Date(locations[i].date * 1000),
+      reportNum: locations[i].reportNum
     });
     // add to markers array
     crimeMarkers.push(marker);
