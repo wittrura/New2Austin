@@ -1,8 +1,22 @@
+@media only screen and (min-width: 993px) {
+  .container {
+    width: 85%;
+  }
+}
+
 #map {
-  height: 400px;
+  height: 500px;
   width: 100%;
 }
 
+/*#hide-crimes, #show-crimes {
+  width: 100%;
+  font-size: .75rem;
+}*/
+
+h2 {
+  font-size: 2.25rem;
+}
 
 .btn-small {
     height: 30px;

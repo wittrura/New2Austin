@@ -21,77 +21,94 @@
       <div class="row">
         <!-- side navigation and user forms -->
         <aside class="col s12 m4">
-          <h3>Find Your New Austin Apartment</h3>
+          <h2>Find Your New Austin Apartment</h2>
           <div class="row">
 
-            <div class="input-field col s6">
-              <select id="max-duration">
-                <option value="" disabled selected>Duration</option>
-                <option value="10">10 min</option>
-                <option value="15">15 min</option>
-                <option value="30">30 min</option>
-                <option value="60">60 min</option>
-              </select>
-
-              <label>Within</label>
-            </div>
-            <div class="input-field col s6">
-              <select id="mode">
-                <option value="" disabled selected>Transit type</option>
-                <option value="DRIVING">drive</option>
-                <option value="WALKING">walk</option>
-                <option value="BICYCLING">bike</option>
-                <option value="TRANSIT">transit ride</option>
-              </select>
-            <label></label>
+            <div class="input-field col s12">
+              <!-- <div class="col s6"> -->
+                <input type="button" class="waves-effect waves-light btn btn-small" id="show-crimes" value="Show Crimes">
+              <!-- </div>
+              <div class="col s6"> -->
+                <input type="button" class="waves-effect waves-light btn btn-small" id="hide-crimes" value="Hide Crimes">
+              <!-- </div> -->
             </div>
 
-            <div class="input-field col s8">
-              <input placeholder="2005 Willow Creek Dr..." id="search-within-time-text" type="text">
-              <label for="address">of Address</label>
-            </div>
-            <div class="input-field col s4">
-              <input class="waves-effect waves-light btn btn-small" id="search-within-time" type="button" value="Go">
-            </div>
+            <div class="col s12"><hr></div>
 
             <div class="col s12">
-              <hr>
+                <p>Draw a shape to search the area within it</p>
+                <input type="submit" class="waves-effect waves-light btn btn-small" id="toggle-drawing" value="Drawing Tools">
             </div>
 
-            <!-- TODO - is this necessary??? -->
-            <div class="input-field col s6 m12">
-              <input placeholder="Uchi, University of Texas..." id="landmark" type="text">
-              <input type="button" value="zoom" id="landmark-btn">
-              <label for="landmark">Landmark</label>
-            </div>
-            <!--  -->
 
-            <div class="col s8 offset-s2 m12">
-               <label>Search Radius</label>
-               <p class="range-field">
-                  <input type="range" id="test" min="0" max="100" />
-               </p>
+            <div class="col s12"><hr></div>
+
+
+            <div class="input-field col s8">
+              <input placeholder="Cherrywood, University of Texas..." id="zoom-to-places" type="text">
+              <!-- <input type="button" value="zoom" id="landmark-btn"> -->
+              <label for="landmark">Search by Area, Landmark</label>
+            </div>
+            <div class="input-field col s4">
+              <input class="waves-effect waves-light btn btn-small right" id="zoom-to-places-go" type="button" value="Zoom">
             </div>
 
-            <div class="input-field col s6 m12">
-              <select multiple>
-                <option value="" disabled selected>Choose your option</option>
-                <option value="1">Minor Misdemeanor</option>
-                <option value="2">Drugs</option>
-                <option value="3">Violent</option>
-              </select>
-              <label>Choose crime severity</label>
+
+            <div class="col s12"><hr></div>
+
+
+            <div class="input-field col s8">
+              <input placeholder="Apartments, bars, gyms..." id="search-nearby-places" type="text">
+              <!-- <input type="button" value="zoom" id="landmark-btn"> -->
+              <label for="landmark">Search for nearby places</label>
             </div>
+            <div class="input-field col s4">
+              <input class="waves-effect waves-light btn btn-small right" id="search-nearby-places-go" type="button" value="Go">
+            </div>
+
+
+            <div class="col s12"><hr></div>
+
+
+            <!-- <div class="input-field col s6 m12"> -->
+              <div class="input-field col s8">
+                <select id="crimeType">
+                  <option value="" disabled selected>Choose your option</option>
+                  <option value="1">Sexual Assault, Rape</option>
+                  <option value="2">Theft and Burglary</option>
+                  <option value="3">Assault</option>
+                  <option value="4">Possession</option>
+                  <option value="5">Driving and Auto</option>
+                  <option value="6">All</option>
+                </select>
+                <label>Choose crime severity</label>
+
+              </div>
+              <div class="input-field col s4">
+                <input class="waves-effect waves-light btn btn-small right" id="crimeType-go" type="button" value="Update">
+              </div>
+            <!-- </div> -->
+
+
+            <div class="col s12"><hr></div>
 
 
             <div class="col s6 m12">
-              <label>Choose map type</label>
-              <div>
-                <input name="group1" type="radio" id="test1" />
-                <label for="test1">Heatmap</label>
-                <input name="group1" type="radio" id="test2" />
-                <label for="test2">Standard / Markers</label>
-              </div>
+              <form action="#">
+                <label>Choose Map Type</label>
+                <p>
+                  <input name="group1" type="radio" id="toggleStandard" checked='checked'/>
+                  <label for="toggleStandard">Standard</label>
+                </p>
+                <p>
+                  <input name="group1" type="radio" id="toggleCluster" />
+                  <label for="toggleCluster">Cluster</label>
+                </p>
+                <p>
+                  <input name="group1" type="radio" id="toggleHeatmap"  />
+                  <label for="toggleHeatmap">Heatmap</label>
+                </p>
+              </form>
             </div>
           </div>
         </aside>
@@ -106,6 +123,6 @@
       </div>
     </div>
     <script src="/js/markerclusterer.js"></script>
-    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmtXin7oAd31UpI6KzioQIdSNBqCQuKx8&libraries=places,visualization&callback=initMap" type="text/javascript"></script>
+    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmtXin7oAd31UpI6KzioQIdSNBqCQuKx8&libraries=drawing,geometry,places,visualization&callback=initMap" type="text/javascript"></script>
   </body>
 </html>
