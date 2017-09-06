@@ -87,7 +87,7 @@ function initMap() {
     // loop through locations array to create markers for crimes on initialization
     // TODO - only loading 50 crimes based on response times, update to locations.length
     console.log(locations.length);
-    for (var i = 0; i < 1000; i++) {
+    for (let i = 0; i < 1000; i++) {
       let position = locations[i].location;
       let title = locations[i].crimeType;
 
@@ -105,7 +105,7 @@ function initMap() {
 
       // add listeners to open infowindow with crime details on click
       marker.addListener('click', function() {
-        populateInfoWindow(this, largeInfowindow);
+        populateCrimeInfoWindow(this, largeInfowindow);
       });
 
       let latLng = new google.maps.LatLng(locations[i].location.lat, locations[i].location.lng);
@@ -143,7 +143,7 @@ function initMap() {
 // populates infowindow when a marker is clicked
 // only one infowindow allowed open at a time
 // data is populated based on markers position
-function populateInfoWindow(marker, infowindow) {
+function populateCrimeInfoWindow(marker, infowindow) {
   // check that the infowindow is not already opened on this marker
   if (infowindow.marker != marker) {
     let formattedReportNum = `${marker.reportNum.substring(0,4)}-${marker.reportNum.substring(4)}`
@@ -165,13 +165,37 @@ function populateInfoWindow(marker, infowindow) {
   }
 }
 
+// populates infowindow when a marker is clicked for searched places
+// data is populated by getting details for each place
+function populatePlacesInfoWindow(marker, infowindow) {
+  let placesService = new google.maps.places.PlacesService(map);
+  // check that the infowindow is not already opened on this marker
+  if (infowindow.marker != marker) {
+    placesService.getDetails({placeId: marker.id}, function(place, status) {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        infowindow.marker = marker;
+        infowindow.setContent(`
+          <div>${marker.title}</div>
+          <div><a target='_blank' href='${place.website}'>${place.website}</a></div>
+          `);
+          infowindow.open(map, marker);
+
+          // clear marker property if an infowindow is closed
+          infowindow.addListener('closeclick', function() {
+            infowindow.marker = null;
+          });
+      }
+    });
+  }
+}
+
 
 // loop through markers and display all
 function showCrimes(fitBounds = true) {
   // instantiate map boundaries
   let bounds = new google.maps.LatLngBounds();
 
-  for (var i = 0; i < crimeMarkers.length; i++) {
+  for (let i = 0; i < crimeMarkers.length; i++) {
     crimeMarkers[i].setMap(map);
     // extend map boundaries for each marker
     bounds.extend(crimeMarkers[i].position);
@@ -185,7 +209,7 @@ function showCrimes(fitBounds = true) {
 
 // hides arrays of markers
 function hideMarkers(markers) {
-  for (var i = 0; i < markers.length; i++) {
+  for (let i = 0; i < markers.length; i++) {
     markers[i].setMap(null);
   }
 }
@@ -228,7 +252,7 @@ function activateDrawingMarkers(event) {
 
 // hides all markers outside polygon, and shows markers within
 function searchWithinPolygon() {
-  for (var i = 0; i < crimeMarkers.length; i++) {
+  for (let i = 0; i < crimeMarkers.length; i++) {
     if (google.maps.geometry.poly.containsLocation(crimeMarkers[i].position, polygon)) {
       crimeMarkers[i].setMap(map);
     } else {
@@ -303,7 +327,8 @@ function textSearchPlaces() {
 
 function createMarkersForPlaces(places) {
   let bounds = new google.maps.LatLngBounds();
-  for (var i = 0; i < places.length; i++) {
+
+  for (let i = 0; i < places.length; i++) {
     let place = places[i];
     let icon = {
       url: place.icon,
@@ -318,9 +343,16 @@ function createMarkersForPlaces(places) {
       icon: icon,
       title: place.name,
       position: place.geometry.location,
-      id: place.id
+      id: place.place_id
     });
     placeMarkers.push(marker);
+
+    //
+    // add listeners to open infowindow with place details on click
+    marker.addListener('click', function() {
+      populatePlacesInfoWindow(this, largeInfowindow);
+    });
+    //
 
     if (place.geometry.viewport) {
       bounds.union(place.geometry.viewport);
@@ -421,7 +453,7 @@ function updateCrimeMarkers(newLocations) {
   // remove all references to previous markers, full delete
   crimeMarkers = [];
 
-  for (var i = 0; i < newLocations.length; i++) {
+  for (let i = 0; i < newLocations.length; i++) {
     let position = newLocations[i].location;
     let title = newLocations[i].crimeType;
 
@@ -439,7 +471,7 @@ function updateCrimeMarkers(newLocations) {
 
     // add listeners to open infowindow with crime details on click
     marker.addListener('click', function() {
-      populateInfoWindow(this, largeInfowindow);
+      populateCrimeInfoWindow(this, largeInfowindow);
     });
 
     let latLng = new google.maps.LatLng(newLocations[i].location.lat, newLocations[i].location.lng);
