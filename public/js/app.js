@@ -366,7 +366,7 @@ function filterCrimeMarkersType(crimeCode) {
   let filteredLocations = [];
 
   // default case, to return all locations unfiltered
-  if (crimeCode === '7') {
+  if (crimeCode === '6') {
     return locations;
   }
 
@@ -404,9 +404,9 @@ function filterCrimeMarkersType(crimeCode) {
         }
         break;
       // other
-      case '6':
+      // case '6':
       default:
-        filteredLocations.push(location);
+        // filteredLocations.push(location);
     }
   });
   console.log(filteredLocations);
