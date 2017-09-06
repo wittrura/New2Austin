@@ -5,6 +5,7 @@ $(document).ready(function() {
     document.getElementById('hide-crimes').addEventListener('click', function() {
       hideMarkers(crimeMarkers);
     });
+
     document.getElementById('toggle-drawing').addEventListener('click', function() {
       toggleDrawing(drawingManager);
     });
@@ -50,6 +51,7 @@ $(document).ready(function() {
 // instantiate map, blank array for all crimes markers
 let map = null;
 let crimeMarkers = [];
+let largeInfowindow = null;
 let drawingManager = null;
 let polygon = null;
 
@@ -62,7 +64,6 @@ let heatMapData = [];
 
 // separate from crime markers, these will be for searching places
 let placeMarkers = [];
-
 
 // to store full list of data from API
 let locations = null;
@@ -78,7 +79,7 @@ function initMap() {
   });
 
   // instantiate infowindow
-  let largeInfowindow = new google.maps.InfoWindow();
+  largeInfowindow = new google.maps.InfoWindow();
 
 
   // request crime locations from API endpoint
@@ -96,7 +97,8 @@ function initMap() {
         position: position,
         title: title,
         animation: google.maps.Animation.DROP,
-        id: i
+        id: i,
+        date: new Date(locations[i].date * 1000)
       });
       // add to markers array
       crimeMarkers.push(marker);
@@ -106,7 +108,6 @@ function initMap() {
         populateInfoWindow(this, largeInfowindow);
       });
 
-      // console.log(locations[i].location.lat);
       let latLng = new google.maps.LatLng(locations[i].location.lat, locations[i].location.lng);
       heatMapData.push(latLng);
 
@@ -146,7 +147,10 @@ function populateInfoWindow(marker, infowindow) {
   // check that the infowindow is not already opened on this marker
   if (infowindow.marker != marker) {
     infowindow.marker = marker;
-    infowindow.setContent('<div>' + marker.title + '</div>');
+    infowindow.setContent(`
+      <div>${marker.title}</div>
+      <div>${marker.date}</div>
+      `);
     infowindow.open(map, marker);
 
     // clear marker property if an infowindow is closed
@@ -245,7 +249,6 @@ function zoomToPlaces() {
       if (status == 'OK') {
         // if response is successful, update map center and zoom in
         map.setCenter(results[0].geometry.location);
-        console.log(results[0]);
         map.setZoom(14);
       } else {
         window.alert('There was an error connecting to the server. Please try again');
@@ -354,9 +357,7 @@ function filterCrimeMarkersType(crimeCode) {
     switch (crimeCode) {
       // sex and rape
       case '1':
-        // console.log('matched case 1');
         if (location.crimeType.search(/sex|rape/i) > -1) {
-          // console.log('matched search term');
           filteredLocations.push(location);
         }
         break;
@@ -391,10 +392,42 @@ function filterCrimeMarkersType(crimeCode) {
     }
   });
   console.log(filteredLocations);
-  return filteredLocations;
+  updateCrimeMarkers(filteredLocations);
 }
 
-// updates array of crime markers after filtering by type or date
-function updateCrimeMarkers() {
 
+// updates array of crime markers after filtering by type or date
+function updateCrimeMarkers(newLocations) {
+  // sets all individual markers to not be assigned to a map
+  for (var i = 0; i < crimeMarkers.length; i++) {
+    crimeMarkers[i].setMap(null);
+  }
+  // remove all references to previous markers, full delete
+  crimeMarkers = [];
+
+  for (var i = 0; i < newLocations.length; i++) {
+    let position = newLocations[i].location;
+    let title = newLocations[i].crimeType;
+
+    // create a new marker for each location
+    let marker = new google.maps.Marker({
+      position: position,
+      title: title,
+      animation: google.maps.Animation.DROP,
+      id: i,
+      date: new Date(newLocations[i].date * 1000)
+    });
+    // add to markers array
+    crimeMarkers.push(marker);
+
+    // add listeners to open infowindow with crime details on click
+    marker.addListener('click', function() {
+      populateInfoWindow(this, largeInfowindow);
+    });
+
+    let latLng = new google.maps.LatLng(newLocations[i].location.lat, newLocations[i].location.lng);
+    heatMapData.push(latLng);
+
+  }
+  showCrimes();
 }
