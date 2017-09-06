@@ -2,9 +2,6 @@ $(document).ready(function() {
     $('select').material_select();
 
     document.getElementById('show-crimes').addEventListener('click', showCrimes);
-    // document.getElementById('hide-crimes').addEventListener('click', function() {
-    //   hideMarkers(crimeMarkers);
-    // });
     document.getElementById('hide-crimes').addEventListener('click', resetMarkers);
 
     document.getElementById('toggle-drawing').addEventListener('click', function() {
@@ -89,7 +86,8 @@ function initMap() {
   }).done(function() {
     // loop through locations array to create markers for crimes on initialization
     // TODO - only loading 50 crimes based on response times, update to locations.length
-    for (var i = 0; i < 50; i++) {
+    console.log(locations.length);
+    for (var i = 0; i < 1000; i++) {
       let position = locations[i].location;
       let title = locations[i].crimeType;
 
@@ -269,7 +267,6 @@ function zoomToPlaces() {
 // executes if user enters text to search places and clicks a suggestion
 function searchBoxPlaces(searchBox) {
   hideMarkers(placeMarkers);
-
   let places = searchBox.getPlaces();
   createMarkersForPlaces(places);
 
@@ -285,17 +282,22 @@ function textSearchPlaces() {
 
   let placesService = new google.maps.places.PlacesService(map);
   let searchText = document.getElementById('search-nearby-places').value;
-  placesService.textSearch({
-    // bias the search to be within 1000m of the center of the map
-    location: map.getCenter(),
-    radius: 1000,
-    query: searchText,
-    bounds: bounds
-  }, function(results, status) {
-    if (status === google.maps.places.PlacesServiceStatus.OK) {
-      createMarkersForPlaces(results);
-    }
-  });
+
+  if (searchText === '') {
+    window.alert('Please enter an area or place');
+  } else {
+    placesService.textSearch({
+      // bias the search to be within 1000m of the center of the map
+      location: map.getCenter(),
+      radius: 1000,
+      query: searchText,
+      bounds: bounds
+    }, function(results, status) {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        createMarkersForPlaces(results);
+      }
+    });
+  }
 }
 
 
@@ -429,8 +431,8 @@ function updateCrimeMarkers(newLocations) {
       title: title,
       animation: google.maps.Animation.DROP,
       id: i,
-      date: new Date(locations[i].date * 1000),
-      reportNum: locations[i].reportNum
+      date: new Date(newLocations[i].date * 1000),
+      reportNum: newLocations[i].reportNum
     });
     // add to markers array
     crimeMarkers.push(marker);
