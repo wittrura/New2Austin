@@ -122,6 +122,19 @@
         <!-- /map -->
       </div>
     </div>
+    <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyCQ6jakzNhGOqumAicSrHgJP7srxho5Awc",
+        authDomain: "new2austin-4a9a6.firebaseapp.com",
+        databaseURL: "https://new2austin-4a9a6.firebaseio.com",
+        projectId: "new2austin-4a9a6",
+        storageBucket: "",
+        messagingSenderId: "754189777725"
+      };
+      firebase.initializeApp(config);
+    </script>
     <script src="/js/markerclusterer.js"></script>
     <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmtXin7oAd31UpI6KzioQIdSNBqCQuKx8&libraries=drawing,geometry,places,visualization&callback=initMap" type="text/javascript"></script>
   </body>

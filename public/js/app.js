@@ -36,14 +36,56 @@ $(document).ready(function() {
     // listen for user clicking go when searching for places
     document.getElementById('search-nearby-places-go').addEventListener('click', textSearchPlaces);
 
-    //
+    // toggles different views of crime data
     document.getElementById('toggleStandard').addEventListener('click', toggleStandard);
     document.getElementById('toggleCluster').addEventListener('click', toggleCluster);
     document.getElementById('toggleHeatmap').addEventListener('click', toggleHeatmap);
 
-    //
+    // listen for users to click for filtering by category
+    // and grab the selected category from the dropdown
     document.getElementById('crimeType-go').addEventListener('click', function(e) {
       filterCrimeMarkersType(document.getElementById('crimeType').value);
+    });
+
+
+    // Get a reference to the database service
+    var ref = firebase.database().ref('data');
+    let cleanData = [];
+    ref.limitToFirst(13).once('value')
+      .then(function(snapshot) {
+        // console.log(snapshot.val());
+        for (var i = 0; i < snapshot.val().length; i++) {
+          // console.log(snapshot.val()[i][8]);
+          cleanData.push({
+            reportNum: snapshot.val()[i][8],
+            crimeType: snapshot.val()[i][9],
+            date: snapshot.val()[i][10],
+            address: snapshot.val()[i][13],
+            location: {
+              lat: Number.parseFloat(snapshot.val()[i][15]),
+              lng: Number.parseFloat(snapshot.val()[i][14])
+            }
+          });
+          // console.log(snapshot.val()[i][8]);
+          // console.log(snapshot.val()[i][9]);
+          // console.log(snapshot.val()[i][13]);
+          // console.log(snapshot.val()[i][14]);
+          // console.log(snapshot.val()[i][15]);
+        }
+        console.log(cleanData);
+        
+        let incidentsLatLng = [];
+        cleanData.forEach((incident) => {
+          console.log(incident.location.lat, incident.location.lng);
+          if (incident.location.lat && incident.location.lng) {
+            incidentsLatLng.push(incident);
+          }
+        });
+        console.log(incidentsLatLng);
+        // console.log(cleanData[1]);
+        // console.log(cleanData[2]);
+        // console.log(cleanData[4]);
+        // console.log(cleanData[5]);
     });
 });
 
