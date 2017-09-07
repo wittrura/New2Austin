@@ -10,12 +10,7 @@ $(document).ready(function() {
     toggleDrawing(drawingManager);
   });
 
-  // drawingManager.addListener('overlaycomplete', function(e) {
-  //   activateDrawingMarkers(e);
-  // });
-
   document.getElementById('zoom-to-places-go').addEventListener('click', zoomToPlaces);
-
 
   let zoomAutocomplete = new google.maps.places.Autocomplete(document.getElementById('zoom-to-places'));
   zoomAutocomplete.bindTo('bounds', map);
@@ -88,10 +83,8 @@ let heatMapData = [];
 
 // blank array for all crimes markers
 let crimeMarkers = [];
-
 // separate from crime markers, these will be for searching places
 let placeMarkers = [];
-
 // to store full list of data from API
 let locations = [];
 
@@ -189,112 +182,47 @@ function initMap() {
   });
 }
 
-
-  // request crime locations from API endpoint
-//   $.get('http://localhost:5000/json', function(data) {
-//     locations = data;
-//   }).done(function() {
-//     // loop through locations array to create markers for crimes on initialization
-//     // TODO - only loading 50 crimes based on response times
-//     // update to locations.length = about 7000 total entries
-//     for (let i = 0; i < 1000; i++) {
-//       let position = locations[i].location;
-//       let title = locations[i].crimeType;
-//
-//       // create a new marker for each location
-//       let marker = new google.maps.Marker({
-//         position: position,
-//         title: title,
-//         animation: google.maps.Animation.DROP,
-//         id: i,
-//         date: new Date(locations[i].date * 1000),
-//         reportNum: locations[i].reportNum
-//       });
-//       // add to markers array
-//       crimeMarkers.push(marker);
-//
-//       // add listeners to open infowindow with crime details on click
-//       marker.addListener('click', function() {
-//         populateCrimeInfoWindow(this, largeInfowindow);
-//       });
-//
-//       let latLng = new google.maps.LatLng(locations[i].location.lat, locations[i].location.lng);
-//       heatMapData.push(latLng);
-//
-//     }
-//   });
-//
-//
-//   // initialize the drawing manager
-//   drawingManager = new google.maps.drawing.DrawingManager({
-//     drawingMode: google.maps.drawing.OverlayType.POLYGON,
-//     drawingControl: true,
-//     drawingControlOptions: {
-//       position: google.maps.ControlPosition.TOP_LEFT,
-//       drawingModes: [
-//         google.maps.drawing.OverlayType.POLYGON
-//       ]
-//     }
-//   });
-//
-//   // initialize heatmap layer
-//   heatmap = new google.maps.visualization.HeatmapLayer({
-//     data: heatMapData,
-//     dissipating: true,
-//     map: map,
-//     radius: 50,
-//     opacity: 0.5
-//   });
-//   heatmap.setMap(null);
-//
-// }
-
-
 // populates infowindow when a marker is clicked
 // only one infowindow allowed open at a time
 // data is populated based on markers position
+// function populateCrimeInfoWindow(marker, infowindow) {
 function populateCrimeInfoWindow(marker, infowindow) {
+  let formattedReportNum = `${marker.reportNum.substring(0,4)}-${marker.reportNum.substring(4)}`;
+  let content = `
+    <div>${marker.title}</div>
+    <div>Date: ${marker.date}</div>
+    <div>Report Number:
+      <a target='_blank' href='https://www.ci.austin.tx.us/police/reports/search2.cfm?choice=caseno&caseno=${formattedReportNum}&Submit=Submit'>
+      ${formattedReportNum}</a>
+    </div>`;
+
+  populateInfoWindow(marker, content, infowindow);
+}
+
+function populatePlacesInfoWindow(marker, infowindow) {
+  let placesService = new google.maps.places.PlacesService(map);
+  placesService.getDetails({placeId: marker.id}, function(place, status) {
+    if (status === google.maps.places.PlacesServiceStatus.OK) {
+      let content = `
+        <div>${marker.title}</div>
+        <div><a target='_blank' href='${place.website}'>${place.website}</a></div>`;
+
+      populateInfoWindow(marker, content, infowindow);
+    }
+  });
+}
+
+function populateInfoWindow(marker, content, infowindow) {
   // check that the infowindow is not already opened on this marker
   if (infowindow.marker != marker) {
-    let formattedReportNum = `${marker.reportNum.substring(0,4)}-${marker.reportNum.substring(4)}`;
+    // assign marker, content, and open infowindow
     infowindow.marker = marker;
-    infowindow.setContent(`
-      <div>${marker.title}</div>
-      <div>Date: ${marker.date}</div>
-      <div>Report Number:
-        <a target='_blank' href='https://www.ci.austin.tx.us/police/reports/search2.cfm?choice=caseno&caseno=${formattedReportNum}&Submit=Submit'>
-        ${formattedReportNum}</a>
-      </div>
-      `);
+    infowindow.setContent(content);
     infowindow.open(map, marker);
 
     // clear marker property if an infowindow is closed
     infowindow.addListener('closeclick', function() {
       infowindow.marker = null;
-    });
-  }
-}
-
-// populates infowindow when a marker is clicked for searched places
-// data is populated by getting details for each place
-function populatePlacesInfoWindow(marker, infowindow) {
-  let placesService = new google.maps.places.PlacesService(map);
-  // check that the infowindow is not already opened on this marker
-  if (infowindow.marker != marker) {
-    placesService.getDetails({placeId: marker.id}, function(place, status) {
-      if (status === google.maps.places.PlacesServiceStatus.OK) {
-        infowindow.marker = marker;
-        infowindow.setContent(`
-          <div>${marker.title}</div>
-          <div><a target='_blank' href='${place.website}'>${place.website}</a></div>
-          `);
-          infowindow.open(map, marker);
-
-          // clear marker property if an infowindow is closed
-          infowindow.addListener('closeclick', function() {
-            infowindow.marker = null;
-          });
-      }
     });
   }
 }
@@ -548,7 +476,6 @@ function filterCrimeMarkersType(crimeCode) {
       // other
       // case '6':
       default:
-        // filteredLocations.push(location);
     }
   });
   console.log(filteredLocations);
