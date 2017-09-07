@@ -47,15 +47,12 @@ $(document).ready(function() {
     filterCrimeMarkersType(document.getElementById('crimeType').value);
   });
 
-
   // Get a reference to the database service
   // var ref = firebase.database().ref('data');
   // let cleanData = [];
   // ref.limitToFirst(1000).once('value')
   //   .then(function(snapshot) {
-  //     // console.log(snapshot.val());
   //     for (var i = 0; i < snapshot.val().length; i++) {
-  //       // console.log(snapshot.val()[i][8]);
   //       cleanData.push({
   //         reportNum: snapshot.val()[i][8],
   //         crimeType: snapshot.val()[i][9],
@@ -66,13 +63,7 @@ $(document).ready(function() {
   //           lng: Number.parseFloat(snapshot.val()[i][14])
   //         }
   //       });
-  //       // console.log(snapshot.val()[i][8]);
-  //       // console.log(snapshot.val()[i][9]);
-  //       // console.log(snapshot.val()[i][13]);
-  //       // console.log(snapshot.val()[i][14]);
-  //       // console.log(snapshot.val()[i][15]);
   //     }
-  //     console.log(cleanData);
   //
   //     let incidentsLatLng = [];
   //     cleanData.forEach((incident) => {
@@ -80,28 +71,23 @@ $(document).ready(function() {
   //         incidentsLatLng.push(incident);
   //       }
   //     });
-  //     console.log(incidentsLatLng);
   // });
-
-
-
 });
 
 
-// instantiate map, blank array for all crimes markers
+// instantiate map and supporting components for use globally
 let map = null;
-let crimeMarkers = [];
 let largeInfowindow = null;
 let drawingManager = null;
 let polygon = null;
 
-//
+// instantiate markerCluster and heatMap variables for use globally
 let markerCluster = null;
-
-//
 let heatMap = null;
 let heatMapData = [];
 
+// blank array for all crimes markers
+let crimeMarkers = [];
 
 // separate from crime markers, these will be for searching places
 let placeMarkers = [];
@@ -122,14 +108,15 @@ function initMap() {
   // instantiate infowindow
   largeInfowindow = new google.maps.InfoWindow();
 
-
-  //
+  // call to APD API to get data
+  // limiting and offsetting to get the most recent data in a usable size
+  // filter for latitude > 1 to get ONLY crime data with lat/lng
   $.ajax({
     url: "https://data.austintexas.gov/resource/rkrg-9tez.json?$where=latitude > 1",
     type: "GET",
     data: {
-      "$offset": 2500,
-      "$limit" : 5000,
+      "$offset": 5000,
+      "$limit" : 500,
       "$$app_token" : "TaNrAhtTuk3dVwHmpmMHRJJYX"
     }
   }).done(function(data) {
@@ -159,7 +146,7 @@ function initMap() {
         title: title,
         animation: google.maps.Animation.DROP,
         id: i,
-        date: new Date(locations[i].date * 1000),
+        date: new Date(locations[i].date),
         reportNum: locations[i].reportNum
       });
       // add to markers array
@@ -586,7 +573,8 @@ function updateCrimeMarkers(newLocations) {
       title: title,
       animation: google.maps.Animation.DROP,
       id: i,
-      date: new Date(newLocations[i].date * 1000),
+      // date: new Date(newLocations[i].date * 1000),
+      date: new Date(newLocations[i].date),
       reportNum: newLocations[i].reportNum
     });
     // add to markers array
