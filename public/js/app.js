@@ -45,7 +45,7 @@ $(document).ready(function() {
 
 
 // instantiate map and supporting components for use globally
-let map = null;
+var map = null;
 let largeInfowindow = null;
 let drawingManager = null;
 let polygon = null;
@@ -101,7 +101,7 @@ function initMap() {
       });
     }
 
-    for (let i = 0; i < locations.length; i++) {
+    for (var i = 0; i < locations.length; i++) {
       let position = locations[i].location;
       let title = locations[i].crimeType;
 
@@ -205,7 +205,7 @@ function showCrimes(fitBounds = true) {
   // instantiate map boundaries
   let bounds = new google.maps.LatLngBounds();
 
-  for (let i = 0; i < crimeMarkers.length; i++) {
+  for (var i = 0; i < crimeMarkers.length; i++) {
     crimeMarkers[i].setMap(map);
     // extend map boundaries for each marker
     bounds.extend(crimeMarkers[i].position);
@@ -219,7 +219,7 @@ function showCrimes(fitBounds = true) {
 
 // hides arrays of markers
 function hideMarkers(markers) {
-  for (let i = 0; i < markers.length; i++) {
+  for (var i = 0; i < markers.length; i++) {
     markers[i].setMap(null);
   }
 }
@@ -262,7 +262,7 @@ function activateDrawingMarkers(event) {
 
 // hides all markers outside polygon, and shows markers within
 function searchWithinPolygon() {
-  for (let i = 0; i < crimeMarkers.length; i++) {
+  for (var i = 0; i < crimeMarkers.length; i++) {
     if (google.maps.geometry.poly.containsLocation(crimeMarkers[i].position, polygon)) {
       crimeMarkers[i].setMap(map);
     } else {
@@ -338,7 +338,7 @@ function textSearchPlaces() {
 function createMarkersForPlaces(places) {
   let bounds = new google.maps.LatLngBounds();
 
-  for (let i = 0; i < places.length; i++) {
+  for (var i = 0; i < places.length; i++) {
     let place = places[i];
     let icon = {
       url: place.icon,
@@ -459,7 +459,7 @@ function updateCrimeMarkers(newLocations) {
   // remove all references to previous markers, full delete
   crimeMarkers = [];
 
-  for (let i = 0; i < newLocations.length; i++) {
+  for (var i = 0; i < newLocations.length; i++) {
     let position = newLocations[i].location;
     let title = newLocations[i].crimeType;
 
