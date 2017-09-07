@@ -113,7 +113,6 @@ function initMap() {
       "$$app_token" : "TaNrAhtTuk3dVwHmpmMHRJJYX"
     }
   }).done(function(data) {
-    console.log(data.length);
 
     for (var i = 0; i < data.length; i++) {
       locations.push({
@@ -127,7 +126,6 @@ function initMap() {
         }
       });
     }
-    console.log(locations);
 
     for (let i = 0; i < locations.length; i++) {
       let position = locations[i].location;
@@ -139,7 +137,7 @@ function initMap() {
         title: title,
         animation: google.maps.Animation.DROP,
         id: i,
-        date: new Date(locations[i].date),
+        date: formatDate(locations[i].date),
         reportNum: locations[i].reportNum
       });
       // add to markers array
@@ -478,7 +476,6 @@ function filterCrimeMarkersType(crimeCode) {
       default:
     }
   });
-  console.log(filteredLocations);
   updateCrimeMarkers(filteredLocations);
 }
 
@@ -500,8 +497,7 @@ function updateCrimeMarkers(newLocations) {
       title: title,
       animation: google.maps.Animation.DROP,
       id: i,
-      // date: new Date(newLocations[i].date * 1000),
-      date: new Date(newLocations[i].date),
+      date: formatDate(newLocations[i].date),
       reportNum: newLocations[i].reportNum
     });
     // add to markers array
@@ -517,4 +513,16 @@ function updateCrimeMarkers(newLocations) {
 
   }
   showCrimes();
+}
+
+// formats a raw floating timestamp to more common YYYY MMM DD
+function formatDate(date) {
+  let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  let dateObj = new Date(date);
+  let day = dateObj.getDate();
+  let monthNum = dateObj.getMonth();
+  let year = dateObj.getFullYear()
+
+  return `${year} ${months[monthNum]} ${day}`;
 }
