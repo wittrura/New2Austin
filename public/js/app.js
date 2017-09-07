@@ -41,32 +41,6 @@ $(document).ready(function() {
   document.getElementById('crimeType-go').addEventListener('click', function(e) {
     filterCrimeMarkersType(document.getElementById('crimeType').value);
   });
-
-  // Get a reference to the database service
-  // var ref = firebase.database().ref('data');
-  // let cleanData = [];
-  // ref.limitToFirst(1000).once('value')
-  //   .then(function(snapshot) {
-  //     for (var i = 0; i < snapshot.val().length; i++) {
-  //       cleanData.push({
-  //         reportNum: snapshot.val()[i][8],
-  //         crimeType: snapshot.val()[i][9],
-  //         date: snapshot.val()[i][10],
-  //         address: snapshot.val()[i][13],
-  //         location: {
-  //           lat: Number.parseFloat(snapshot.val()[i][15]),
-  //           lng: Number.parseFloat(snapshot.val()[i][14])
-  //         }
-  //       });
-  //     }
-  //
-  //     let incidentsLatLng = [];
-  //     cleanData.forEach((incident) => {
-  //       if (incident.location.lat && incident.location.lng) {
-  //         incidentsLatLng.push(incident);
-  //       }
-  //     });
-  // });
 });
 
 
@@ -383,12 +357,10 @@ function createMarkersForPlaces(places) {
     });
     placeMarkers.push(marker);
 
-    //
     // add listeners to open infowindow with place details on click
     marker.addListener('click', function() {
       populatePlacesInfoWindow(this, largeInfowindow);
     });
-    //
 
     if (place.geometry.viewport) {
       bounds.union(place.geometry.viewport);

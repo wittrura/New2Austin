@@ -1,3 +1,8 @@
+/*
+blue: #3167ab
+red: #b13239
+*/
+
 @media only screen and (min-width: 993px) {
   .container {
     width: 85%;
@@ -15,17 +20,8 @@
   width: 100%;
 }
 
-/*#hide-crimes, #show-crimes {
-  width: 100%;
-  font-size: .75rem;
-}*/
-
 h2 {
   font-size: 2rem;
-}
-
-.btn{
-  background-color: #3167ab;
 }
 
 [type="radio"]:checked+label:after, [type="radio"].with-gap:checked+label:after {
@@ -33,33 +29,22 @@ h2 {
   border-color: #3167ab;
 }
 
-.btn-small {
-    height: 30px;
-    line-height: 30px;
-    padding: 0 0.5rem;
-}
-
-nav .brand-logo {
-  /*background-image: url('../Austin-Skyline-Blackout.png');*/
-  font-weight: 300;
-  font-style: italic;
-  font-size: 3rem;
-}
 
 nav {
   background-color: #b13239;
   opacity: 0.75;
 }
+nav .brand-logo {
+  font-weight: 300;
+  font-style: italic;
+  font-size: 3rem;
+}
 
-.right-btn {
+.btn {
+  background-color: #3167ab;
+  padding: 0 1rem;
+}
+.btn-right {
   width: 100%;
   padding: 0 .75rem;
 }
-/*body {
-  background-image: url('../greetingsFromAustin.jpg');
-}*/
-
-/*
-blue: #3167ab
-red: #b13239
-*/
