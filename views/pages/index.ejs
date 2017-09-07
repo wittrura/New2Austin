@@ -33,9 +33,10 @@
           <h2 class="center-align">Find Your New Austin Apartment</h2>
           <div class="row">
 
-            <div class="input-field col s12 center-align">
+            <!-- <div class="input-field col s12 center-align"> -->
+            <div class="col s12 center-align">
               <!-- <div class="col s6"> -->
-              <a class="waves-effect waves-light btn" id="show-crimes">Show Crimes</a>
+              <a class="waves-effect waves-light btn" id="show-crimes" href="#map">Show Crimes</a>
               <a class="waves-effect waves-light btn" id="clear-map">Clear Map</a>
 
 
@@ -50,7 +51,7 @@
 
             <div class="col s12 center-align">
               <p>Draw a shape to search the area within it</p>
-              <a class="waves-effect waves-light btn" id="toggle-drawing">Drawing Tools</a>
+              <a class="waves-effect waves-light btn" id="toggle-drawing" href="#map">Drawing Tools</a>
               <!-- <input type="submit" class="waves-effect waves-light btn btn-small" id="toggle-drawing" value="Drawing Tools"> -->
             </div>
 
@@ -63,8 +64,9 @@
               <!-- <input type="button" value="zoom" id="landmark-btn"> -->
               <label for="landmark">Search by Area, Landmark</label>
             </div>
-            <div class="input-field col s4">
-              <input class="waves-effect waves-light btn btn-small right" id="zoom-to-places-go" type="button" value="Zoom">
+            <div class="input-field col s4 right-align">
+              <a class="waves-effect waves-light btn right-btn" id="zoom-to-places-go" href="#map">Zoom</a>
+              <!-- <input class="waves-effect waves-light btn btn-small right" id="zoom-to-places-go" type="button" value="Zoom"> -->
             </div>
 
 
@@ -76,8 +78,9 @@
               <!-- <input type="button" value="zoom" id="landmark-btn"> -->
               <label for="landmark">Search for nearby places</label>
             </div>
-            <div class="input-field col s4">
-              <input class="waves-effect waves-light btn btn-small right" id="search-nearby-places-go" type="button" value="Go">
+            <div class="input-field col s4 right-align">
+              <a class="waves-effect waves-light btn right-btn" id="search-nearby-places-go" href="#map">Go</a>
+              <!-- <input class="waves-effect waves-light btn btn-small right" id="search-nearby-places-go" type="button" value="Go"> -->
             </div>
 
 
@@ -98,8 +101,9 @@
                 <label>Choose crime severity</label>
 
               </div>
-              <div class="input-field col s4">
-                <input class="waves-effect waves-light btn btn-small right" id="crimeType-go" type="button" value="Update">
+              <div class="input-field col s4 right-align">
+                <a class="waves-effect waves-light btn right-btn" id="crimeType-go" href="#map">Update</a>
+                <!-- <input class="waves-effect waves-light btn btn-small right" id="crimeType-go" type="button" value="Update"> -->
               </div>
             <!-- </div> -->
 
@@ -107,21 +111,21 @@
             <div class="col s12"><hr></div>
 
 
-            <div class="col s6 m12">
+            <div class="col s12">
               <form action="#">
                 <label>Choose Map Type</label>
-                <p>
+                <div class="radio-container">
                   <input name="group1" type="radio" id="toggleStandard" checked='checked'/>
                   <label for="toggleStandard">Standard</label>
-                </p>
-                <p>
+                </div>
+                <div class="radio-container">
                   <input name="group1" type="radio" id="toggleCluster" />
                   <label for="toggleCluster">Cluster</label>
-                </p>
-                <p>
+                </div>
+                <div class="radio-container">
                   <input name="group1" type="radio" id="toggleHeatmap"  />
                   <label for="toggleHeatmap">Heatmap</label>
-                </p>
+                </div>
               </form>
             </div>
           </div>
