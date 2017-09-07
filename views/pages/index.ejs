@@ -15,29 +15,43 @@
   </head>
   <body>
     <!-- navbar -->
-
+    <nav>
+      <div class="nav-wrapper">
+        <a href="#" class="brand-logo center">New2Austin</a>
+        <!-- <ul id="nav-mobile" class="left hide-on-med-and-down">
+          <li><a href="sass.html">Sass</a></li>
+          <li><a href="badges.html">Components</a></li>
+          <li><a href="collapsible.html">JavaScript</a></li>
+        </ul> -->
+      </div>
+    </nav>
     <!-- /navbar -->
     <div class="container">
       <div class="row">
         <!-- side navigation and user forms -->
         <aside class="col s12 m4">
-          <h2>Find Your New Austin Apartment</h2>
+          <h2 class="center-align">Find Your New Austin Apartment</h2>
           <div class="row">
 
-            <div class="input-field col s12">
+            <div class="input-field col s12 center-align">
               <!-- <div class="col s6"> -->
-                <input type="button" class="waves-effect waves-light btn btn-small" id="show-crimes" value="Show Crimes">
+              <a class="waves-effect waves-light btn" id="show-crimes">Show Crimes</a>
+              <a class="waves-effect waves-light btn" id="clear-map">Clear Map</a>
+
+
+                <!-- <input type="button" class="waves-effect waves-light btn btn-small" id="show-crimes" value="Show Crimes"> -->
               <!-- </div>
               <div class="col s6"> -->
-                <input type="button" class="waves-effect waves-light btn btn-small" id="clear-map" value="Clear Map">
+                <!-- <input type="button" class="waves-effect waves-light btn btn-small" id="clear-map" value="Clear Map"> -->
               <!-- </div> -->
             </div>
 
             <div class="col s12"><hr></div>
 
-            <div class="col s12">
-                <p>Draw a shape to search the area within it</p>
-                <input type="submit" class="waves-effect waves-light btn btn-small" id="toggle-drawing" value="Drawing Tools">
+            <div class="col s12 center-align">
+              <p>Draw a shape to search the area within it</p>
+              <a class="waves-effect waves-light btn" id="toggle-drawing">Drawing Tools</a>
+              <!-- <input type="submit" class="waves-effect waves-light btn btn-small" id="toggle-drawing" value="Drawing Tools"> -->
             </div>
 
 
@@ -116,14 +130,14 @@
 
         <!-- map -->
         <main class="col s12 m8">
-          <h2>Map Results</h2>
+          <h2 class="center-align">Map Results</h2>
           <div class="row" id="map"></div>
         </main>
         <!-- /map -->
       </div>
     </div>
     <script src="https://www.gstatic.com/firebasejs/4.3.0/firebase.js"></script>
-    <script>
+    <!-- <script>
       // Initialize Firebase
       var config = {
         apiKey: "AIzaSyCQ6jakzNhGOqumAicSrHgJP7srxho5Awc",
@@ -134,7 +148,7 @@
         messagingSenderId: "754189777725"
       };
       firebase.initializeApp(config);
-    </script>
+    </script> -->
     <script src="/js/markerclusterer.js"></script>
     <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmtXin7oAd31UpI6KzioQIdSNBqCQuKx8&libraries=drawing,geometry,places,visualization&callback=initMap" type="text/javascript"></script>
   </body>

@@ -18,8 +18,35 @@ h2 {
   font-size: 2.25rem;
 }
 
+.btn{
+  background-color: #3167ab;
+}
+
+[type="radio"]:checked+label:after, [type="radio"].with-gap:checked+label:after {
+  background-color: #3167ab;
+  border-color: #3167ab;
+}
+
 .btn-small {
     height: 30px;
     line-height: 30px;
     padding: 0 0.5rem;
 }
+
+.brand-logo {
+  background-image: url('../Austin-Skyline-Blackout.png');
+}
+
+nav {
+  background-color: #b13239;
+  opacity: 0.75;
+}
+
+/*body {
+  background-image: url('../greetingsFromAustin.jpg');
+}*/
+
+/*
+blue: #3167ab
+red: #b13239
+*/
