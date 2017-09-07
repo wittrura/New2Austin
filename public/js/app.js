@@ -1,3 +1,5 @@
+/* jshint esversion: 6 */
+
 $(document).ready(function() {
     $('select').material_select();
 
@@ -133,7 +135,7 @@ function initMap() {
     dissipating: true,
     map: map,
     radius: 50,
-    opacity: .5
+    opacity: 0.5
   });
   heatmap.setMap(null);
 
@@ -146,7 +148,7 @@ function initMap() {
 function populateCrimeInfoWindow(marker, infowindow) {
   // check that the infowindow is not already opened on this marker
   if (infowindow.marker != marker) {
-    let formattedReportNum = `${marker.reportNum.substring(0,4)}-${marker.reportNum.substring(4)}`
+    let formattedReportNum = `${marker.reportNum.substring(0,4)}-${marker.reportNum.substring(4)}`;
     infowindow.marker = marker;
     infowindow.setContent(`
       <div>${marker.title}</div>
