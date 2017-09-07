@@ -4,7 +4,7 @@ $(document).ready(function() {
   $('select').material_select();
 
   document.getElementById('show-crimes').addEventListener('click', showCrimes);
-  document.getElementById('hide-crimes').addEventListener('click', resetMarkers);
+  document.getElementById('clear-map').addEventListener('click', resetMarkers);
 
   document.getElementById('toggle-drawing').addEventListener('click', function() {
     toggleDrawing(drawingManager);
@@ -349,7 +349,7 @@ function textSearchPlaces() {
     placesService.textSearch({
       // bias the search to be within 1000m of the center of the map
       location: map.getCenter(),
-      radius: 1000,
+      radius: 2000,
       query: searchText,
       bounds: bounds
     }, function(results, status) {
@@ -396,7 +396,7 @@ function createMarkersForPlaces(places) {
       bounds.extend(place.geometry.location);
     }
   }
-  map.fitBounds(bounds);
+  // map.fitBounds(bounds);
 }
 
 
@@ -419,8 +419,9 @@ function toggleStandard() {
   showCrimes(false);
 }
 
-// disable layers and hides crimeMarkers
+// disable layers, hide crimeMarkers, hide placeMarkers
 function resetMarkers() {
+  hideMarkers(placeMarkers);
   hideMarkers(crimeMarkers);
   if (markerCluster) {
     markerCluster.clearMarkers();
@@ -482,8 +483,7 @@ function filterCrimeMarkersType(crimeCode) {
 
 // updates array of crime markers after filtering by type or date
 function updateCrimeMarkers(newLocations) {
-  // sets all individual markers to not be assigned to a map
-  hideMarkers(crimeMarkers);
+  resetMarkers();
   // remove all references to previous markers, full delete
   crimeMarkers = [];
 
@@ -513,6 +513,9 @@ function updateCrimeMarkers(newLocations) {
 
   }
   showCrimes();
+
+  // re-check standard view by default
+  document.getElementById('toggleStandard').checked = true;
 }
 
 // formats a raw floating timestamp to more common YYYY MMM DD
