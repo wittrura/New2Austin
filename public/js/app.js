@@ -51,7 +51,7 @@ $(document).ready(function() {
     // Get a reference to the database service
     var ref = firebase.database().ref('data');
     let cleanData = [];
-    ref.limitToFirst(13).once('value')
+    ref.limitToFirst(1000).once('value')
       .then(function(snapshot) {
         // console.log(snapshot.val());
         for (var i = 0; i < snapshot.val().length; i++) {
@@ -73,19 +73,14 @@ $(document).ready(function() {
           // console.log(snapshot.val()[i][15]);
         }
         console.log(cleanData);
-        
+
         let incidentsLatLng = [];
         cleanData.forEach((incident) => {
-          console.log(incident.location.lat, incident.location.lng);
           if (incident.location.lat && incident.location.lng) {
             incidentsLatLng.push(incident);
           }
         });
         console.log(incidentsLatLng);
-        // console.log(cleanData[1]);
-        // console.log(cleanData[2]);
-        // console.log(cleanData[4]);
-        // console.log(cleanData[5]);
     });
 });
 
@@ -129,8 +124,8 @@ function initMap() {
     locations = data;
   }).done(function() {
     // loop through locations array to create markers for crimes on initialization
-    // TODO - only loading 50 crimes based on response times, update to locations.length
-    console.log(locations.length);
+    // TODO - only loading 50 crimes based on response times
+    // update to locations.length = about 7000 total entries
     for (let i = 0; i < 1000; i++) {
       let position = locations[i].location;
       let title = locations[i].crimeType;
