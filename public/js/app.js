@@ -1,87 +1,90 @@
 /* jshint esversion: 6 */
 
 $(document).ready(function() {
-    $('select').material_select();
+  $('select').material_select();
 
-    document.getElementById('show-crimes').addEventListener('click', showCrimes);
-    document.getElementById('hide-crimes').addEventListener('click', resetMarkers);
+  document.getElementById('show-crimes').addEventListener('click', showCrimes);
+  document.getElementById('hide-crimes').addEventListener('click', resetMarkers);
 
-    document.getElementById('toggle-drawing').addEventListener('click', function() {
-      toggleDrawing(drawingManager);
-    });
+  document.getElementById('toggle-drawing').addEventListener('click', function() {
+    toggleDrawing(drawingManager);
+  });
 
-    drawingManager.addListener('overlaycomplete', function(e) {
-      activateDrawingMarkers(e);
-    });
+  // drawingManager.addListener('overlaycomplete', function(e) {
+  //   activateDrawingMarkers(e);
+  // });
 
-    document.getElementById('zoom-to-places-go').addEventListener('click', zoomToPlaces);
+  document.getElementById('zoom-to-places-go').addEventListener('click', zoomToPlaces);
 
 
-    let zoomAutocomplete = new google.maps.places.Autocomplete(document.getElementById('zoom-to-places'));
-    zoomAutocomplete.bindTo('bounds', map);
+  let zoomAutocomplete = new google.maps.places.Autocomplete(document.getElementById('zoom-to-places'));
+  zoomAutocomplete.bindTo('bounds', map);
 
-    // search box, more wide-reaching version of autocomplete. able to search places
-    // bias the SearchBox results towards current map's viewport.
-    let searchBox = new google.maps.places.SearchBox(document.getElementById('search-nearby-places'));
+  // search box, more wide-reaching version of autocomplete. able to search places
+  // bias the SearchBox results towards current map's viewport.
+  let searchBox = new google.maps.places.SearchBox(document.getElementById('search-nearby-places'));
+  searchBox.setBounds(map.getBounds());
+  map.addListener('bounds_changed', function() {
     searchBox.setBounds(map.getBounds());
-    map.addListener('bounds_changed', function() {
-      searchBox.setBounds(map.getBounds());
-    });
+  });
 
-    // listen for user selecting a suggested place and clicking directly
-    searchBox.addListener('places_changed', function() {
-      searchBoxPlaces(this);
-    });
+  // listen for user selecting a suggested place and clicking directly
+  searchBox.addListener('places_changed', function() {
+    searchBoxPlaces(this);
+  });
 
-    // listen for user clicking go when searching for places
-    document.getElementById('search-nearby-places-go').addEventListener('click', textSearchPlaces);
+  // listen for user clicking go when searching for places
+  document.getElementById('search-nearby-places-go').addEventListener('click', textSearchPlaces);
 
-    // toggles different views of crime data
-    document.getElementById('toggleStandard').addEventListener('click', toggleStandard);
-    document.getElementById('toggleCluster').addEventListener('click', toggleCluster);
-    document.getElementById('toggleHeatmap').addEventListener('click', toggleHeatmap);
+  // toggles different views of crime data
+  document.getElementById('toggleStandard').addEventListener('click', toggleStandard);
+  document.getElementById('toggleCluster').addEventListener('click', toggleCluster);
+  document.getElementById('toggleHeatmap').addEventListener('click', toggleHeatmap);
 
-    // listen for users to click for filtering by category
-    // and grab the selected category from the dropdown
-    document.getElementById('crimeType-go').addEventListener('click', function(e) {
-      filterCrimeMarkersType(document.getElementById('crimeType').value);
-    });
+  // listen for users to click for filtering by category
+  // and grab the selected category from the dropdown
+  document.getElementById('crimeType-go').addEventListener('click', function(e) {
+    filterCrimeMarkersType(document.getElementById('crimeType').value);
+  });
 
 
-    // Get a reference to the database service
-    var ref = firebase.database().ref('data');
-    let cleanData = [];
-    ref.limitToFirst(1000).once('value')
-      .then(function(snapshot) {
-        // console.log(snapshot.val());
-        for (var i = 0; i < snapshot.val().length; i++) {
-          // console.log(snapshot.val()[i][8]);
-          cleanData.push({
-            reportNum: snapshot.val()[i][8],
-            crimeType: snapshot.val()[i][9],
-            date: snapshot.val()[i][10],
-            address: snapshot.val()[i][13],
-            location: {
-              lat: Number.parseFloat(snapshot.val()[i][15]),
-              lng: Number.parseFloat(snapshot.val()[i][14])
-            }
-          });
-          // console.log(snapshot.val()[i][8]);
-          // console.log(snapshot.val()[i][9]);
-          // console.log(snapshot.val()[i][13]);
-          // console.log(snapshot.val()[i][14]);
-          // console.log(snapshot.val()[i][15]);
-        }
-        console.log(cleanData);
+  // Get a reference to the database service
+  // var ref = firebase.database().ref('data');
+  // let cleanData = [];
+  // ref.limitToFirst(1000).once('value')
+  //   .then(function(snapshot) {
+  //     // console.log(snapshot.val());
+  //     for (var i = 0; i < snapshot.val().length; i++) {
+  //       // console.log(snapshot.val()[i][8]);
+  //       cleanData.push({
+  //         reportNum: snapshot.val()[i][8],
+  //         crimeType: snapshot.val()[i][9],
+  //         date: snapshot.val()[i][10],
+  //         address: snapshot.val()[i][13],
+  //         location: {
+  //           lat: Number.parseFloat(snapshot.val()[i][15]),
+  //           lng: Number.parseFloat(snapshot.val()[i][14])
+  //         }
+  //       });
+  //       // console.log(snapshot.val()[i][8]);
+  //       // console.log(snapshot.val()[i][9]);
+  //       // console.log(snapshot.val()[i][13]);
+  //       // console.log(snapshot.val()[i][14]);
+  //       // console.log(snapshot.val()[i][15]);
+  //     }
+  //     console.log(cleanData);
+  //
+  //     let incidentsLatLng = [];
+  //     cleanData.forEach((incident) => {
+  //       if (incident.location.lat && incident.location.lng) {
+  //         incidentsLatLng.push(incident);
+  //       }
+  //     });
+  //     console.log(incidentsLatLng);
+  // });
 
-        let incidentsLatLng = [];
-        cleanData.forEach((incident) => {
-          if (incident.location.lat && incident.location.lng) {
-            incidentsLatLng.push(incident);
-          }
-        });
-        console.log(incidentsLatLng);
-    });
+
+
 });
 
 
@@ -99,11 +102,12 @@ let markerCluster = null;
 let heatMap = null;
 let heatMapData = [];
 
+
 // separate from crime markers, these will be for searching places
 let placeMarkers = [];
 
 // to store full list of data from API
-let locations = null;
+let locations = [];
 
 
 // intialize map object with default properties
@@ -119,14 +123,33 @@ function initMap() {
   largeInfowindow = new google.maps.InfoWindow();
 
 
-  // request crime locations from API endpoint
-  $.get('http://localhost:5000/json', function(data) {
-    locations = data;
-  }).done(function() {
-    // loop through locations array to create markers for crimes on initialization
-    // TODO - only loading 50 crimes based on response times
-    // update to locations.length = about 7000 total entries
-    for (let i = 0; i < 1000; i++) {
+  //
+  $.ajax({
+    url: "https://data.austintexas.gov/resource/rkrg-9tez.json?$where=latitude > 1",
+    type: "GET",
+    data: {
+      "$offset": 2500,
+      "$limit" : 5000,
+      "$$app_token" : "TaNrAhtTuk3dVwHmpmMHRJJYX"
+    }
+  }).done(function(data) {
+    console.log(data.length);
+
+    for (var i = 0; i < data.length; i++) {
+      locations.push({
+        reportNum: data[i].incident_report_number,
+        crimeType: data[i].crime_type,
+        date: data[i].date,
+        address: data[i].address,
+        location: {
+          lat: Number.parseFloat(data[i].latitude),
+          lng: Number.parseFloat(data[i].longitude)
+        }
+      });
+    }
+    console.log(locations);
+
+    for (let i = 0; i < locations.length; i++) {
       let position = locations[i].location;
       let title = locations[i].crimeType;
 
@@ -149,34 +172,95 @@ function initMap() {
 
       let latLng = new google.maps.LatLng(locations[i].location.lat, locations[i].location.lng);
       heatMapData.push(latLng);
-
     }
+
+    // initialize the drawing manager
+    drawingManager = new google.maps.drawing.DrawingManager({
+      drawingMode: google.maps.drawing.OverlayType.POLYGON,
+      drawingControl: true,
+      drawingControlOptions: {
+        position: google.maps.ControlPosition.TOP_LEFT,
+        drawingModes: [
+          google.maps.drawing.OverlayType.POLYGON
+        ]
+      }
+    });
+    drawingManager.addListener('overlaycomplete', function(e) {
+      activateDrawingMarkers(e);
+    });
+
+    // initialize heatmap layer
+    heatmap = new google.maps.visualization.HeatmapLayer({
+      data: heatMapData,
+      dissipating: true,
+      map: map,
+      radius: 50,
+      opacity: 0.5
+    });
+    heatmap.setMap(null);
+
   });
-
-
-  // initialize the drawing manager
-  drawingManager = new google.maps.drawing.DrawingManager({
-    drawingMode: google.maps.drawing.OverlayType.POLYGON,
-    drawingControl: true,
-    drawingControlOptions: {
-      position: google.maps.ControlPosition.TOP_LEFT,
-      drawingModes: [
-        google.maps.drawing.OverlayType.POLYGON
-      ]
-    }
-  });
-
-  // initialize heatmap layer
-  heatmap = new google.maps.visualization.HeatmapLayer({
-    data: heatMapData,
-    dissipating: true,
-    map: map,
-    radius: 50,
-    opacity: 0.5
-  });
-  heatmap.setMap(null);
-
 }
+
+
+  // request crime locations from API endpoint
+//   $.get('http://localhost:5000/json', function(data) {
+//     locations = data;
+//   }).done(function() {
+//     // loop through locations array to create markers for crimes on initialization
+//     // TODO - only loading 50 crimes based on response times
+//     // update to locations.length = about 7000 total entries
+//     for (let i = 0; i < 1000; i++) {
+//       let position = locations[i].location;
+//       let title = locations[i].crimeType;
+//
+//       // create a new marker for each location
+//       let marker = new google.maps.Marker({
+//         position: position,
+//         title: title,
+//         animation: google.maps.Animation.DROP,
+//         id: i,
+//         date: new Date(locations[i].date * 1000),
+//         reportNum: locations[i].reportNum
+//       });
+//       // add to markers array
+//       crimeMarkers.push(marker);
+//
+//       // add listeners to open infowindow with crime details on click
+//       marker.addListener('click', function() {
+//         populateCrimeInfoWindow(this, largeInfowindow);
+//       });
+//
+//       let latLng = new google.maps.LatLng(locations[i].location.lat, locations[i].location.lng);
+//       heatMapData.push(latLng);
+//
+//     }
+//   });
+//
+//
+//   // initialize the drawing manager
+//   drawingManager = new google.maps.drawing.DrawingManager({
+//     drawingMode: google.maps.drawing.OverlayType.POLYGON,
+//     drawingControl: true,
+//     drawingControlOptions: {
+//       position: google.maps.ControlPosition.TOP_LEFT,
+//       drawingModes: [
+//         google.maps.drawing.OverlayType.POLYGON
+//       ]
+//     }
+//   });
+//
+//   // initialize heatmap layer
+//   heatmap = new google.maps.visualization.HeatmapLayer({
+//     data: heatMapData,
+//     dissipating: true,
+//     map: map,
+//     radius: 50,
+//     opacity: 0.5
+//   });
+//   heatmap.setMap(null);
+//
+// }
 
 
 // populates infowindow when a marker is clicked
