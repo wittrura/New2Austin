@@ -3,13 +3,18 @@ blue: #3167ab
 red: #b13239
 */
 
-@media only screen and (min-width: 600px) and (max-width: 910px){
+@media only screen and (min-width: 601px) and (max-width: 910px){
   .input-field.right-align {
     padding: 0 .25rem;
   }
   .input-field.right-align .btn{
     padding: 0;
     font-size: .75rem;
+  }
+
+  #show-crimes, #clear-map {
+    font-size: .75rem;
+    padding: 0 .40rem;
   }
 }
 
@@ -25,7 +30,7 @@ red: #b13239
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 601px) {
   .radio-container {
     display: inline;
   }
@@ -34,6 +39,7 @@ red: #b13239
 #map {
   height: 500px;
   width: 100%;
+  margin: 0 auto;
 }
 
 h2 {
