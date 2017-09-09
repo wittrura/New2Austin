@@ -1,4 +1,4 @@
-# Project Title
+# New2Austin
 
 New2Austin helps to solve the problem of finding a good and safe place to live for anybody looking
 to move to the Austin area. The app uses the Google Maps API combined with Austin Police
