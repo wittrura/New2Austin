@@ -118,7 +118,7 @@ function initMap() {
       crimeMarkers.push(marker);
 
       // add listeners to open infowindow with crime details on click
-      marker.addListener('click', setupInfoWindow);
+      marker.addListener('click', setupCrimeMarkerListener);
 
       let latLng = new google.maps.LatLng(locations[i].location.lat, locations[i].location.lng);
       heatMapData.push(latLng);
@@ -356,7 +356,7 @@ function createMarkersForPlaces(places) {
     placeMarkers.push(marker);
 
     // add listeners to open infowindow with place details on click
-    marker.addListener('click', setupInfoWindow);
+    marker.addListener('click', setupPlaceMarkerListener);
 
     if (place.geometry.viewport) {
       bounds.union(place.geometry.viewport);
@@ -472,7 +472,7 @@ function updateCrimeMarkers(newLocations) {
     crimeMarkers.push(marker);
 
     // add listeners to open infowindow with crime details on click
-    marker.addListener('click', setupInfoWindow);
+    marker.addListener('click', setupCrimeMarkerListener);
 
     let latLng = new google.maps.LatLng(newLocations[i].location.lat, newLocations[i].location.lng);
     heatMapData.push(latLng);
@@ -496,6 +496,11 @@ function formatDate(date) {
   return `${year} ${months[monthNum]} ${day}`;
 }
 
-function setupInfoWindow () {
+// defines process for setting up this infowindow, to be added via listener
+// after new markers are created for crimes
+function setupCrimeMarkerListener () {
   return populateCrimeInfoWindow(this, largeInfowindow);
+}
+function setupPlaceMarkerListener (windowToPopulate) {
+  return populatePlacesInfoWindow(this, largeInfowindow);
 }
